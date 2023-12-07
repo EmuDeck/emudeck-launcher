@@ -15,6 +15,147 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
+/* custom */
+
+const os = require('os');
+const fs = require('fs');
+const systemsData = require('../data/systems.json');
+
+const homeUser = os.homedir();
+
+// Settings to JS vars
+let settingsPath;
+const themesPath = `${homeUser}/emudeck/launcher/themes/`;
+const themeCSSPath = `${homeUser}/emudeck/launcher/themes/enabled/index.css`;
+if (os.platform().includes('win32')) {
+  settingsPath = `${homeUser}/EmuDeck/settings.ps1`;
+} else {
+  settingsPath = `${homeUser}/emudeck/settings.sh`;
+}
+const settingsContent = fs.readFileSync(settingsPath, 'utf8');
+const themeCSSContent = fs.readFileSync(themeCSSPath, 'utf8');
+// Divide el contenido en líneas y filtra las líneas que no son comentarios
+const lines = settingsContent
+  .split('\n')
+  .filter((line) => !line.startsWith('#'));
+
+// Crea un objeto con las variables de entorno
+const envVars = {};
+lines.forEach((line) => {
+  const [key, value] = line.split('=');
+  envVars[key.trim()] = value;
+});
+
+const { romsPath } = envVars;
+
+const maxDepth = 2; // Puedes ajustar este valor según tu necesidad
+
+const systems = {};
+const gameList = {};
+
+function processFolder(folderPath, depth) {
+  const files = fs.readdirSync(folderPath);
+
+  files.forEach((file) => {
+    const filePath = path.join(folderPath, file);
+    const stat = fs.statSync(filePath);
+
+    if (stat.isDirectory()) {
+      // Procesar carpetas de forma recursiva
+      processFolder(filePath, depth + 1);
+    } else if (stat.isFile() && file.toLowerCase() === 'systeminfo.txt') {
+      // Leer systeminfo.txt y extraer extensiones permitidas
+      const systemInfoContent = fs.readFileSync(filePath, 'utf8');
+      const allowedExtensions = systemInfoContent
+        .split('\n')
+        .filter((line) => line.trim().startsWith('.'))
+        .map((line) => line.trim().substring(1));
+
+      // Crear entrada en systems para la carpeta actual
+      const folderName = path.basename(folderPath);
+      systems[folderName] = { id: folderName, games: 0 };
+      const systemID = systems[folderName];
+      const systemData = systemsData[folderName];
+      systems[folderName] = { ...systemID, ...systemData };
+      systems[
+        folderName
+      ].poster = `file://${homeUser}/emudeck/launcher/themes/enabled/posters/${folderName}.jpg`;
+      systems[
+        folderName
+      ].controller = `file://${homeUser}/emudeck/launcher/themes/enabled/controllers/${folderName}.png`;
+      systems[
+        folderName
+      ].logo = `file://${homeUser}/emudeck/launcher/themes/enabled/logos/${folderName}.jpg`;
+      // Crear entrada en gameList para la carpeta actual
+      gameList[folderName] = {};
+
+      // Recorrer archivos en la carpeta actual y verificar extensiones
+      const filesInFolder = fs.readdirSync(folderPath);
+
+      filesInFolder.forEach((gameFile) => {
+        const gameFilePath = path.join(folderPath, gameFile);
+        const gameFileExt = `.${path
+          .extname(gameFile)
+          .toLowerCase()
+          .substring(1)}`;
+
+        const statGame = fs.statSync(gameFilePath);
+
+        if (
+          statGame.isFile() &&
+          allowedExtensions[0].includes(gameFileExt) &&
+          !gameFile.startsWith('.')
+        ) {
+          // Añadir entrada en gameList
+          const systemName = path.basename(romsPath);
+          const relativePath = path.relative(romsPath, folderPath);
+
+          // console.log({ gameFilePath });
+
+          gameList[folderName] = {
+            gameFile: {
+              name: gameFile,
+              path: path.join(romsPath, relativePath, gameFile),
+            },
+          };
+
+          // Incrementar contador de juegos
+          systems[folderName].games++;
+        }
+      });
+
+      // Eliminar entrada en systems y gameList si no hay juegos
+      if (systems[folderName].games === 0) {
+        delete systems[folderName];
+        delete gameList[folderName];
+      }
+    }
+  });
+}
+
+// Iniciar el proceso con la carpeta principal
+processFolder(romsPath, maxDepth);
+
+ipcMain.on('get-systems', async (event) => {
+  event.reply('get-systems', JSON.stringify(Object.values(systems), null, 2));
+});
+
+ipcMain.on('get-games', async (event, system) => {
+  if (system !== undefined) {
+    console.log(gameList[system]);
+    event.reply(
+      'get-games',
+      JSON.stringify(Object.values(gameList[system]), null, 2),
+    );
+  }
+});
+
+ipcMain.on('get-theme', async (event) => {
+  event.reply('get-theme', themeCSSContent);
+});
+
+/* end custom */
+
 class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -73,8 +214,10 @@ const createWindow = async () => {
     show: false,
     width: 1024,
     height: 728,
+    autoHideMenuBar: true,
     icon: getAssetPath('icon.png'),
     webPreferences: {
+      webSecurity: false,
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
         : path.join(__dirname, '../../.erb/dll/preload.js'),
@@ -135,3 +278,4 @@ app
     });
   })
   .catch(console.log);
+//
