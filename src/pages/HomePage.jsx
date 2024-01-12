@@ -1,8 +1,39 @@
 import React, { useEffect, useState } from 'react';
-
 import { useNavigate, Link } from 'react-router-dom';
+import { useFocusable, init, FocusContext } from '../spatial';
 
-function HomePage() {
+init({
+  debug: false,
+  visualDebug: false,
+});
+
+function MenuItem(data) {
+  const { ref, focused } = useFocusable();
+
+  // return (
+  //   <span
+  //     ref={ref}
+  //     className={`menu-item ${focused ? 'menu-item-focused' : ''}`}
+  //   />
+  // );
+  const item = data.data;
+  return (
+    <Link
+      ref={ref}
+      to={`games/${item.id}`}
+      className={`systems__system ${focused ? 'systems__system--focused' : ''}`}
+    >
+      <img className="systems__bg" src={item.poster} alt="" />
+      <div className="systems__excerpt">{item.excerpt}</div>
+      <div className="systems__name">{item.name}</div>
+      <div className="systems__count">Games: {item.games}</div>
+      <div className="systems__description">{item.description}</div>
+      <img className="systems__controller" src={item.controller} alt="" />
+    </Link>
+  );
+}
+
+function HomePage({ focusKey: focusKeyParam }) {
   const ipcChannel = window.electron.ipcRenderer;
   const [statePage, setStatePage] = useState({ systems: null, themeCSS: null });
   const { systems, themeCSS } = statePage;
@@ -25,29 +56,70 @@ function HomePage() {
       setStatePage({ ...statePage, systems: systemsArray });
     });
   }, [themeCSS]);
+
+  const styles = {
+    '.container': {
+      background: 'lightblue',
+      padding: '20px',
+    },
+    h1: {
+      color: 'darkblue',
+    },
+  };
+
+  const mediaQueries = {
+    '(max-width: 600px)': {
+      '.container': {
+        background: 'lightpink',
+      },
+    },
+    '(min-width: 601px) and (max-width: 900px)': {
+      '.container': {
+        background: 'lightgreen',
+      },
+    },
+    '(min-width: 901px)': {
+      '.container': {
+        background: 'lightcoral',
+      },
+    },
+  };
+
+  const { ref, focusSelf, hasFocusedChild, focusKey } = useFocusable({
+    focusable: true,
+    saveLastFocusedChild: false,
+    trackChildren: true,
+    autoRestoreFocus: true,
+    isFocusBoundary: false,
+    focusKey: focusKeyParam,
+    preferredChildFocusKey: null,
+    onEnterPress: () => {},
+    onEnterRelease: () => {},
+    onArrowPress: () => true,
+    onFocus: () => {},
+    onBlur: () => {},
+    extraProps: { foo: 'bar' },
+  });
+
+  useEffect(() => {
+    focusSelf();
+  }, [systems]);
+
   return (
-    <>
+    <FocusContext.Provider value={focusKey}>
       <style>{themeCSS}</style>
-      <div className="systems">
+      <div
+        ref={ref}
+        className={`systems menu-wrapper ${
+          hasFocusedChild ? 'menu-wrapper-focused' : 'menu-wrapper-unfocused'
+        }`}
+      >
         {systems &&
           systems.map((item, i) => {
-            return (
-              <Link to={`games/${item.id}`} className="systems__system" key={i}>
-                <img className="systems__bg" src={item.poster} alt="" />
-                <div className="systems__excerpt">{item.excerpt}</div>
-                <div className="systems__name">{item.name}</div>
-                <div className="systems__count">Games: {item.games}</div>
-                <div className="systems__description">{item.description}</div>
-                <img
-                  className="systems__controller"
-                  src={item.controller}
-                  alt=""
-                />
-              </Link>
-            );
+            return <MenuItem data={item} key={i} />;
           })}
       </div>
-    </>
+    </FocusContext.Provider>
   );
 }
 
