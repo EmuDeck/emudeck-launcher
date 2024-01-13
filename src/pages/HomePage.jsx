@@ -36,6 +36,7 @@ function System({ data, onEnterPress, onFocus }) {
 
 function HomePage({ focusKey: focusKeyParam }) {
   const ipcChannel = window.electron.ipcRenderer;
+  const navigate = useNavigate();
   const [statePage, setStatePage] = useState({ systems: null, themeCSS: null });
   const { systems, themeCSS } = statePage;
 
@@ -98,6 +99,13 @@ function HomePage({ focusKey: focusKeyParam }) {
     [scrollingRef],
   );
 
+  const onAssetPress = useCallback(
+    (item) => {
+      navigate(`games/${item.id}`);
+    },
+    [navigate],
+  );
+
   const { ref, focusSelf, hasFocusedChild, focusKey } = useFocusable({
     focusable: true,
     saveLastFocusedChild: false,
@@ -131,23 +139,58 @@ function HomePage({ focusKey: focusKeyParam }) {
           >
             {systems &&
               systems.map((item, i) => {
-                return <System data={item} key={i} onFocus={onAssetFocus} />;
+                return (
+                  <System
+                    data={item}
+                    key={i}
+                    onFocus={onAssetFocus}
+                    onEnterPress={() => onAssetPress(item)}
+                  />
+                );
               })}
             {systems &&
               systems.map((item, i) => {
-                return <System data={item} key={i} onFocus={onAssetFocus} />;
+                return (
+                  <System
+                    data={item}
+                    key={i}
+                    onFocus={onAssetFocus}
+                    onEnterPress={() => onAssetPress(item)}
+                  />
+                );
               })}{' '}
             {systems &&
               systems.map((item, i) => {
-                return <System data={item} key={i} onFocus={onAssetFocus} />;
+                return (
+                  <System
+                    data={item}
+                    key={i}
+                    onFocus={onAssetFocus}
+                    onEnterPress={() => onAssetPress(item)}
+                  />
+                );
               })}{' '}
             {systems &&
               systems.map((item, i) => {
-                return <System data={item} key={i} onFocus={onAssetFocus} />;
+                return (
+                  <System
+                    data={item}
+                    key={i}
+                    onFocus={onAssetFocus}
+                    onEnterPress={() => onAssetPress(item)}
+                  />
+                );
               })}{' '}
             {systems &&
               systems.map((item, i) => {
-                return <System data={item} key={i} onFocus={onAssetFocus} />;
+                return (
+                  <System
+                    data={item}
+                    key={i}
+                    onFocus={onAssetFocus}
+                    onEnterPress={() => onAssetPress(item)}
+                  />
+                );
               })}
           </div>
         </div>
