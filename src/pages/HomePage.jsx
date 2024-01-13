@@ -7,7 +7,7 @@ init({
   visualDebug: false,
 });
 
-function MenuItem(data) {
+function MenuItem({ data, tabindex }) {
   const { ref, focused } = useFocusable();
 
   // return (
@@ -16,9 +16,10 @@ function MenuItem(data) {
   //     className={`menu-item ${focused ? 'menu-item-focused' : ''}`}
   //   />
   // );
-  const item = data.data;
+  const item = data;
   return (
     <Link
+      tabindex={tabindex}
       ref={ref}
       to={`games/${item.id}`}
       className={`systems__system ${focused ? 'systems__system--focused' : ''}`}
@@ -93,7 +94,9 @@ function HomePage({ focusKey: focusKeyParam }) {
     isFocusBoundary: false,
     focusKey: focusKeyParam,
     preferredChildFocusKey: null,
-    onEnterPress: () => {},
+    onEnterPress: () => {
+      alert('ppe');
+    },
     onEnterRelease: () => {},
     onArrowPress: () => true,
     onFocus: () => {},
@@ -110,10 +113,14 @@ function HomePage({ focusKey: focusKeyParam }) {
       <style>{themeCSS}</style>
       <div
         ref={ref}
-        className={`systems menu-wrapper ${
-          hasFocusedChild ? 'menu-wrapper-focused' : 'menu-wrapper-unfocused'
+        className={`systems ${
+          hasFocusedChild ? 'systems-focused' : 'systems-unfocused'
         }`}
       >
+        {systems &&
+          systems.map((item, i) => {
+            return <MenuItem tabindex={i} data={item} key={i} />;
+          })}
         {systems &&
           systems.map((item, i) => {
             return <MenuItem data={item} key={i} />;
