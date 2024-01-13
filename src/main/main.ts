@@ -91,7 +91,7 @@ function processFolder(folderPath, depth) {
 
       // Recorrer archivos en la carpeta actual y verificar extensiones
       const filesInFolder = fs.readdirSync(folderPath);
-
+      let i = 0;
       filesInFolder.forEach((gameFile) => {
         const gameFilePath = path.join(folderPath, gameFile);
         const gameFileExt = `.${path
@@ -110,17 +110,16 @@ function processFolder(folderPath, depth) {
           const systemName = path.basename(romsPath);
           const relativePath = path.relative(romsPath, folderPath);
 
-          // console.log({ gameFilePath });
+          console.log({ gameFilePath });
 
-          gameList[folderName] = {
-            gameFile: {
-              name: gameFile,
-              path: path.join(romsPath, relativePath, gameFile),
-            },
+          gameList[folderName][i] = {
+            name: gameFile,
+            path: path.join(romsPath, relativePath, gameFile),
           };
 
           // Incrementar contador de juegos
           systems[folderName].games++;
+          i++;
         }
       });
 

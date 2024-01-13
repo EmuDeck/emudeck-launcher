@@ -16,7 +16,6 @@ function GamesPage() {
     });
   }, []);
   useEffect(() => {
-    ipcChannel.sendMessage('get-games');
     ipcChannel.sendMessage(`get-games`, system);
     ipcChannel.once('get-games', (gamesTemp) => {
       const json = JSON.parse(gamesTemp);
@@ -32,7 +31,7 @@ function GamesPage() {
       {games &&
         games.map((item, i) => {
           return (
-            <div className="games__system" key={i}>
+            <div className="games__system" key={item.name}>
               <img className="games__bg" src={item.poster} alt="" />
               <div className="games__excerpt">{item.excerpt}</div>
               <div className="games__name">{item.name}</div>
