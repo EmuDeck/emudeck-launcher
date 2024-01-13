@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useFocusable, init, FocusContext } from '../spatial';
 
@@ -7,30 +7,30 @@ init({
   visualDebug: false,
 });
 
-function MenuItem({ data, tabindex }) {
-  const { ref, focused } = useFocusable();
+function System({ data, onEnterPress, onFocus }) {
+  const { ref, focused } = useFocusable({
+    onEnterPress,
+    onFocus,
+  });
 
-  // return (
-  //   <span
-  //     ref={ref}
-  //     className={`menu-item ${focused ? 'menu-item-focused' : ''}`}
-  //   />
-  // );
   const item = data;
   return (
-    <Link
-      tabindex={tabindex}
-      ref={ref}
-      to={`games/${item.id}`}
-      className={`systems__system ${focused ? 'systems__system--focused' : ''}`}
-    >
-      <img className="systems__bg" src={item.poster} alt="" />
-      <div className="systems__excerpt">{item.excerpt}</div>
-      <div className="systems__name">{item.name}</div>
-      <div className="systems__count">Games: {item.games}</div>
-      <div className="systems__description">{item.description}</div>
-      <img className="systems__controller" src={item.controller} alt="" />
-    </Link>
+    <div ref={ref}>
+      <Link
+        focused={focused}
+        to={`games/${item.id}`}
+        className={`systems__system ${
+          focused ? 'systems__system--focused' : ''
+        }`}
+      >
+        <img className="systems__bg" src={item.poster} alt="" />
+        <div className="systems__excerpt">{item.excerpt}</div>
+        <div className="systems__name">{item.name}</div>
+        <div className="systems__count">Games: {item.games}</div>
+        <div className="systems__description">{item.description}</div>
+        <img className="systems__controller" src={item.controller} alt="" />
+      </Link>
+    </div>
   );
 }
 
@@ -86,6 +86,18 @@ function HomePage({ focusKey: focusKeyParam }) {
     },
   };
 
+  const scrollingRef = useRef(null);
+
+  const onAssetFocus = useCallback(
+    ({ x }) => {
+      scrollingRef.current.scrollTo({
+        left: x,
+        behavior: 'smooth',
+      });
+    },
+    [scrollingRef],
+  );
+
   const { ref, focusSelf, hasFocusedChild, focusKey } = useFocusable({
     focusable: true,
     saveLastFocusedChild: false,
@@ -94,9 +106,7 @@ function HomePage({ focusKey: focusKeyParam }) {
     isFocusBoundary: false,
     focusKey: focusKeyParam,
     preferredChildFocusKey: null,
-    onEnterPress: () => {
-      alert('ppe');
-    },
+    onEnterPress: () => {},
     onEnterRelease: () => {},
     onArrowPress: () => true,
     onFocus: () => {},
@@ -109,24 +119,40 @@ function HomePage({ focusKey: focusKeyParam }) {
   }, [systems]);
 
   return (
-    <FocusContext.Provider value={focusKey}>
+    <>
       <style>{themeCSS}</style>
-      <div
-        ref={ref}
-        className={`systems ${
-          hasFocusedChild ? 'systems-focused' : 'systems-unfocused'
-        }`}
-      >
-        {systems &&
-          systems.map((item, i) => {
-            return <MenuItem tabindex={i} data={item} key={i} />;
-          })}
-        {systems &&
-          systems.map((item, i) => {
-            return <MenuItem data={item} key={i} />;
-          })}
-      </div>
-    </FocusContext.Provider>
+      <FocusContext.Provider value={focusKey}>
+        <div ref={ref}>
+          <div
+            ref={scrollingRef}
+            className={`systems ${
+              hasFocusedChild ? 'systems-focused' : 'systems-unfocused'
+            }`}
+          >
+            {systems &&
+              systems.map((item, i) => {
+                return <System data={item} key={i} onFocus={onAssetFocus} />;
+              })}
+            {systems &&
+              systems.map((item, i) => {
+                return <System data={item} key={i} onFocus={onAssetFocus} />;
+              })}{' '}
+            {systems &&
+              systems.map((item, i) => {
+                return <System data={item} key={i} onFocus={onAssetFocus} />;
+              })}{' '}
+            {systems &&
+              systems.map((item, i) => {
+                return <System data={item} key={i} onFocus={onAssetFocus} />;
+              })}{' '}
+            {systems &&
+              systems.map((item, i) => {
+                return <System data={item} key={i} onFocus={onAssetFocus} />;
+              })}
+          </div>
+        </div>
+      </FocusContext.Provider>
+    </>
   );
 }
 
