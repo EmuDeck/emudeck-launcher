@@ -1,0 +1,90 @@
+@font-face {
+  font-family: "Bebas";
+  src: url("./fonts/BebasNeue.otf");
+}
+
+body {
+  font-family: "Futura";
+  margin: 0;
+  background: #000
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.systems {
+  scroll-snap-type: x mandatory;
+  overflow-x: scroll;
+  text-align: left;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+}
+.systems__system:focus{
+	transform: rotate(45deg)
+}
+.systems__system {
+  flex: 0 0 100vw;
+  width: 100vw;
+  height: 100vh;
+  background: rgb(0, 0, 0);
+  background: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(255, 255, 255, 0) 100%);
+  color: #fff;
+  font-size: 30px;
+  display: flex;
+  scroll-snap-align: start;
+  flex-direction: column;
+  padding: 70px 70px;
+  position: relative;
+  overflow: hidden;
+  -webkit-appearance: none;
+  border: 0;
+  box-shadow: none;
+  text-align: left;
+  text-decoration: none;
+  transition:1s
+
+}
+
+
+.systems__name {
+  font-size: 10vw;
+  margin-bottom: 20px;
+  font-family: "Bebas";
+}
+
+.systems__excerpt {
+  font-size: 14px;
+  color: #939393;
+  margin-bottom: 12px;
+}
+
+.systems__description {
+  font-size: 18px;
+  color: #9e9e9e;
+  max-width: 300px;
+  margin-bottom: 24px;
+}
+
+.systems__count {
+  font-size: 16px;
+  color: #953a33;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+
+.systems__bg {
+  position: absolute;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  top: 0;
+  left: 0;
+}
+
+.systems__controller {
+  max-width: 30vw;
+}
