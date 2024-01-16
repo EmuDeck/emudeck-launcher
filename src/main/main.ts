@@ -490,14 +490,12 @@ function processFolder(folderPath, depth) {
           let romNameTrimmed = romName
             .replace(/\.nkit/g, '')
             .replace(/!/g, '')
-            .replace(/&/g, 'and')
             .replace(/Disc /g, '')
             .replace(/Rev /g, '')
             .replace(/\([^()]*\)/g, '')
             .replace(/\[[A-z0-9!+]*\]/g, '')
             .replace(/ - /g, '  ')
-            .replace(/ \./g, '.')
-            .replace(/-/g, '  ');
+            .replace(/ \./g, '.');
 
           romNameTrimmed = romNameTrimmed.replace(/\..*/, '');
 
@@ -509,17 +507,20 @@ function processFolder(folderPath, depth) {
 
           const platform = getLaunchboxAlias(folderName);
           let databaseID;
+          let artbox;
 
           const query =
-            'SELECT DatabaseID as databaseid FROM Games WHERE Name = ? and Platform = ? LIMIT 1';
+            'SELECT Games.DatabaseID as databaseid, Images.FileName as filename FROM Games JOIN Images ON Images.DatabaseID = Games.DatabaseID WHERE Type = "Screenshot - Gameplay" AND Name = ? and Platform = ? LIMIT 1';
+
           // Ejecutar la consulta
           db.all(query, [romNameTrimmed, platform], (err, rows) => {
             const obj = rows[0];
             if (obj) {
               databaseID = obj.databaseid;
+              artbox = obj.filename;
             }
             const insertQuery =
-              'INSERT OR IGNORE INTO roms (file_name, name, system,platform, path, databaseID) VALUES (?, ?, ?, ?, ?, ?)';
+              'INSERT OR IGNORE INTO roms (file_name, name, system,platform, path, databaseID, artbox) VALUES (?, ?, ?, ?, ?, ?, ?)';
             db.run(
               insertQuery,
               [
@@ -529,6 +530,7 @@ function processFolder(folderPath, depth) {
                 platform,
                 gameFilePath,
                 databaseID,
+                artbox,
               ],
               function (err) {
                 if (err) {

@@ -1,12 +1,12 @@
 @font-face {
-  font-family: "Bebas";
-  src: url("./fonts/BebasNeue.otf");
+  font-family: 'Bebas';
+  src: url('./fonts/BebasNeue.otf');
 }
 
 body {
-  font-family: "Futura";
+  font-family: 'Futura';
   margin: 0;
-  background: #000
+  background: #000;
 }
 
 * {
@@ -22,15 +22,19 @@ body {
   overflow: hidden;
   display: flex;
 }
-.systems__system:focus{
-	transform: rotate(45deg)
+.systems__system:focus {
+  transform: rotate(45deg);
 }
 .systems__system {
   flex: 0 0 100vw;
   width: 100vw;
   height: 100vh;
   background: rgb(0, 0, 0);
-  background: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(255, 255, 255, 0) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
   color: #fff;
   font-size: 30px;
   display: flex;
@@ -44,15 +48,13 @@ body {
   box-shadow: none;
   text-align: left;
   text-decoration: none;
-  transition:1s
-
+  transition: 1s;
 }
-
 
 .systems__name {
   font-size: 10vw;
   margin-bottom: 20px;
-  font-family: "Bebas";
+  font-family: 'Bebas';
 }
 
 .systems__excerpt {
@@ -86,5 +88,101 @@ body {
 }
 
 .systems__controller {
+  max-width: 30vw;
+}
+
+.games {
+  text-align: left;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-content: flex-start;
+}
+.games__system:focus {
+  transform: rotate(45deg);
+}
+.games__system {
+  width: 33vw;
+  height: 33vh;
+
+  color: #fff;
+  font-size: 30px;
+  display: flex;
+  scroll-snap-align: start;
+  flex-direction: column;
+  padding: 2vw 2vw;
+  position: relative;
+  overflow: hidden;
+  -webkit-appearance: none;
+  border: 0;
+  box-shadow: none;
+  text-align: left;
+  text-decoration: none;
+  transition: 1s;
+  outline: 5px solid #000;
+  z-index: 1;
+}
+.games__system img {
+  transition: 1s;
+  filter: brightness(0.3);
+}
+.games__system--focused {
+  transition: 1s;
+  outline: 5px solid #efefef;
+  z-index: 2;
+}
+.games__system--focused img {
+  filter: brightness(0.8);
+  transition: 1s;
+}
+.games__name {
+  font-size: 2.9rem;
+  margin-bottom: 20px;
+  font-family: 'Bebas';
+  transition: 1s;
+  opacity: 0.8;
+}
+
+.games__system--focused .games__name {
+  opacity: 1;
+  transition: 1s;
+}
+
+.games__excerpt {
+  font-size: 14px;
+  color: #939393;
+  margin-bottom: 12px;
+}
+
+.games__description {
+  font-size: 18px;
+  color: #9e9e9e;
+  max-width: 300px;
+  margin-bottom: 24px;
+}
+
+.games__count {
+  font-size: 16px;
+  color: #953a33;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+
+.games__bg {
+  position: absolute;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  top: 0;
+  left: 0;
+}
+
+.games__controller {
   max-width: 30vw;
 }

@@ -40,10 +40,6 @@ function HomePage({ focusKey: focusKeyParam }) {
   const [statePage, setStatePage] = useState({ systems: null, themeCSS: null });
   const { systems, themeCSS } = statePage;
 
-  const showGames = (system) => {
-    console.log(system);
-  };
-
   useEffect(() => {
     ipcChannel.sendMessage('get-theme');
     ipcChannel.once('get-theme', (themeCSS) => {
@@ -59,40 +55,13 @@ function HomePage({ focusKey: focusKeyParam }) {
     });
   }, [themeCSS]);
 
-  const styles = {
-    '.container': {
-      background: 'lightblue',
-      padding: '20px',
-    },
-    h1: {
-      color: 'darkblue',
-    },
-  };
-
-  const mediaQueries = {
-    '(max-width: 600px)': {
-      '.container': {
-        background: 'lightpink',
-      },
-    },
-    '(min-width: 601px) and (max-width: 900px)': {
-      '.container': {
-        background: 'lightgreen',
-      },
-    },
-    '(min-width: 901px)': {
-      '.container': {
-        background: 'lightcoral',
-      },
-    },
-  };
-
   const scrollingRef = useRef(null);
 
   const onAssetFocus = useCallback(
-    ({ x }) => {
+    ({ x, y }) => {
       scrollingRef.current.scrollTo({
         left: x,
+        top: y,
         behavior: 'smooth',
       });
     },

@@ -1,8 +1,44 @@
-import React, { useEffect, useState, useContext, useRef } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { useFocusable, init, FocusContext } from '../spatial';
 
-import { useParams } from 'react-router-dom';
+init({
+  debug: true,
+  visualDebug: false,
+});
 
-function GamesPage() {
+function Game({ data, onEnterPress, onFocus }) {
+  const { ref, focused } = useFocusable({
+    onEnterPress,
+    onFocus,
+  });
+
+  const item = data;
+  let { name } = item;
+  const maxLength = 24;
+  const ogName = name;
+  name = name.slice(0, maxLength);
+  const isTextCut = ogName.length > maxLength;
+  return (
+    <Link
+      ref={ref}
+      focused={focused}
+      className={`games__system ${focused ? 'games__system--focused' : ''}`}
+    >
+      <img
+        className="games__bg"
+        src={`https://images.launchbox-app.com/${item.artbox}`}
+        alt=""
+      />
+      <div className="games__name">
+        {name}
+        {isTextCut && '...'}
+      </div>
+    </Link>
+  );
+}
+
+function GamesPage({ focusKey: focusKeyParam }) {
   const ipcChannel = window.electron.ipcRenderer;
   const [statePage, setStatePage] = useState({ games: null, themeCSS: null });
   const { themeCSS, games } = statePage;
@@ -11,14 +47,10 @@ function GamesPage() {
 
   useEffect(() => {
     ipcChannel.sendMessage('get-theme');
-    ipcChannel.once('get-theme', (themeCSSData) => {
-      setStatePage({ ...statePage, themeCSSData });
+    ipcChannel.once('get-theme', (themeCSS) => {
+      setStatePage({ ...statePage, themeCSS });
     });
   }, []);
-
-  useEffect(() => {
-    console.log({ games });
-  }, [games]);
 
   useEffect(() => {
     ipcChannel.sendMessage(`get-games`, system);
@@ -27,26 +59,72 @@ function GamesPage() {
       const gamesArray = Object.values(json);
       setStatePage({ ...statePage, games: gamesArray });
     });
-  }, []);
+  }, [themeCSS]);
+
+  const scrollingRef = useRef(null);
+
+  const onAssetFocus = useCallback(
+    ({ x, y }) => {
+      scrollingRef.current.scrollTo({
+        left: x,
+        top: y,
+        behavior: 'smooth',
+      });
+    },
+    [scrollingRef],
+  );
+
+  const { ref, focusSelf, hasFocusedChild, focusKey } = useFocusable({
+    focusable: true,
+    saveLastFocusedChild: false,
+    trackChildren: true,
+    autoRestoreFocus: true,
+    isFocusBoundary: false,
+    focusKey: focusKeyParam,
+    preferredChildFocusKey: null,
+    onEnterPress: () => {},
+    onEnterRelease: () => {},
+    onArrowPress: () => true,
+    onFocus: () => {},
+    onBlur: () => {},
+    extraProps: { foo: 'bar' },
+  });
+
+  useEffect(() => {
+    focusSelf();
+  }, [games]);
+
   return (
     <>
       <style>{themeCSS}</style>
-      <div>Games for {system}</div>
-
-      {games != null &&
-        games.map((item) => {
-          return (
-            <div className="games__system" key={item.name}>
-              <img
-                className="games__bg"
-                src={`https://images.launchbox-app.com/${item.FileName}`}
-                alt=""
-              />
-              <div className="games__name">{item.name}</div>
-              <div className="games__description">{item.description}</div>
-            </div>
-          );
-        })}
+      {/* <div>Games for {system}</div> */}
+      <FocusContext.Provider value={focusKey}>
+        <div ref={ref}>
+          <div
+            ref={scrollingRef}
+            className={`games ${
+              hasFocusedChild ? 'games-focused' : 'games-unfocused'
+            }`}
+          >
+            {games &&
+              games.map((item, i) => {
+                return <Game data={item} key={i} onFocus={onAssetFocus} />;
+              })}{' '}
+            {games &&
+              games.map((item, i) => {
+                return <Game data={item} key={i} onFocus={onAssetFocus} />;
+              })}{' '}
+            {games &&
+              games.map((item, i) => {
+                if (i >= 2) {
+                  return;
+                }
+                return i;
+                return <Game data={item} key={i} onFocus={onAssetFocus} />;
+              })}{' '}
+          </div>
+        </div>
+      </FocusContext.Provider>
     </>
   );
 }
