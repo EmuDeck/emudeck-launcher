@@ -486,9 +486,8 @@ function processFolder(folderPath, depth) {
           };
 
           const romName = gameFile;
-          const romNameNoExtension = romName.replace(/\..*/, '');
 
-          let romNameTrimmed = romNameNoExtension
+          let romNameTrimmed = romName
             .replace(/\.nkit/g, '')
             .replace(/!/g, '')
             .replace(/&/g, 'and')
@@ -497,7 +496,10 @@ function processFolder(folderPath, depth) {
             .replace(/\([^()]*\)/g, '')
             .replace(/\[[A-z0-9!+]*\]/g, '')
             .replace(/ - /g, '  ')
+            .replace(/ \./g, '.')
             .replace(/-/g, '  ');
+
+          romNameTrimmed = romNameTrimmed.replace(/\..*/, '');
 
           // Put "The" at the beginning of the rom name
           if (romNameTrimmed.includes(', The')) {
