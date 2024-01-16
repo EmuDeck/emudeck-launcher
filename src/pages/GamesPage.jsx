@@ -15,6 +15,11 @@ function GamesPage() {
       setStatePage({ ...statePage, themeCSSData });
     });
   }, []);
+
+  useEffect(() => {
+    console.log({ games });
+  }, [games]);
+
   useEffect(() => {
     ipcChannel.sendMessage(`get-games`, system);
     ipcChannel.once('get-games', (gamesTemp) => {
@@ -22,18 +27,21 @@ function GamesPage() {
       const gamesArray = Object.values(json);
       setStatePage({ ...statePage, games: gamesArray });
     });
-  }, [themeCSS]);
+  }, []);
   return (
     <>
       <style>{themeCSS}</style>
       <div>Games for {system}</div>
 
-      {games &&
-        games.map((item, i) => {
+      {games != null &&
+        games.map((item) => {
           return (
             <div className="games__system" key={item.name}>
-              <img className="games__bg" src={item.poster} alt="" />
-              <div className="games__excerpt">{item.excerpt}</div>
+              <img
+                className="games__bg"
+                src={`https://images.launchbox-app.com/${item.FileName}`}
+                alt=""
+              />
               <div className="games__name">{item.name}</div>
               <div className="games__description">{item.description}</div>
             </div>

@@ -16,9 +16,14 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
 /* custom */
+const sqlite3 = require('sqlite3').verbose();
+
+const dbPath = path.join(__dirname, 'sqlite', 'database.db');
+const db = new sqlite3.Database(dbPath);
 
 const os = require('os');
 const fs = require('fs');
+const axios = require('axios');
 const systemsData = require('../data/systems.json');
 
 const homeUser = os.homedir();
@@ -52,6 +57,371 @@ const maxDepth = 2; // Puedes ajustar este valor según tu necesidad
 
 const systems = {};
 const gameList = {};
+
+function imageExists(filePath) {
+  try {
+    fs.accessSync(filePath, fs.constants.F_OK);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+async function downloadImage(url, localPath) {
+  try {
+    const response = await axios.get(url, { responseType: 'arraybuffer' });
+    fs.writeFileSync(localPath, Buffer.from(response.data), 'binary');
+    console.log('Imagen descargada exitosamente.');
+  } catch (error) {
+    console.error('Error al descargar la imagen:', error.message);
+  }
+}
+
+function getLaunchboxAlias(system) {
+  let platform;
+
+  switch (system) {
+    case '3do':
+      platform = '3DO Interactive Multiplayer';
+      break;
+    case 'amiga':
+      platform = 'Commodore Amiga';
+      break;
+    case 'amiga600':
+      platform = 'Commodore Amiga';
+      break;
+    case 'amiga1200':
+      platform = 'Commodore Amiga';
+      break;
+    case 'amigacd32':
+      platform = 'Commodore Amiga CD32';
+      break;
+    case 'amstradcpc':
+      platform = 'Amstrad CPC';
+      break;
+    case 'apple2':
+      platform = 'Apple II';
+      break;
+    case 'apple2gs':
+      platform = 'Apple IIGS';
+      break;
+    case 'arcade':
+      platform = 'Arcade';
+      break;
+    case 'arcadia':
+      platform = 'Emerson Arcadia 2001';
+      break;
+    case 'atari800':
+      platform = 'Atari 800';
+      break;
+    case 'atari2600':
+      platform = 'Atari 2600';
+      break;
+    case 'atari5200':
+      platform = 'Atari 5200';
+      break;
+    case 'atari7800':
+      platform = 'Atari 7800';
+      break;
+    case 'atarijaguar':
+      platform = 'Atari Jaguar';
+      break;
+    case 'atarijaguarcd':
+      platform = 'Atari Jaguar CD';
+      break;
+    case 'atarilynx':
+      platform = 'Atari Lynx';
+      break;
+    case 'atarist':
+      platform = 'Atari ST';
+      break;
+    case 'atarixe':
+      platform = 'Atari XEGS';
+      break;
+    case 'atomiswave':
+      platform = 'Sammy Atomiswave';
+      break;
+    case 'bbcmicro':
+      platform = 'BBC Microcomputer System';
+      break;
+    case 'c64':
+      platform = 'Commodore 64';
+      break;
+    case 'cdtv':
+      platform = 'Commodore CDTV';
+      break;
+    case 'chailove':
+      platform = 'Commodore 128';
+      break;
+    case 'colecovision':
+      platform = 'ColecoVision';
+      break;
+    case 'cps':
+      platform = 'Arcade';
+      break;
+    case 'cps1':
+      platform = 'Arcade';
+      break;
+    case 'cps2':
+      platform = 'Arcade';
+      break;
+    case 'cps3':
+      platform = 'Arcade';
+      break;
+    case 'dos':
+      platform = 'MS-DOS';
+      break;
+    case 'dreamcast':
+      platform = 'Sega Dreamcast';
+      break;
+    case 'doom':
+      platform = 'MS-DOS';
+      break;
+    case 'famicom':
+      platform = 'Nintendo Entertainment System';
+      break;
+    case 'fba':
+      platform = 'Arcade';
+      break;
+    case 'fbneo':
+      platform = 'Arcade';
+      break;
+    case 'gameandwatch':
+      platform = 'Nintendo Game & Watch';
+      break;
+    case 'gc':
+      platform = 'Nintendo GameCube';
+      break;
+    case 'gamegear':
+      platform = 'Sega Game Gear';
+      break;
+    case 'gb':
+      platform = 'Nintendo Game Boy';
+      break;
+    case 'gba':
+      platform = 'Nintendo Game Boy Advance';
+      break;
+    case 'gbc':
+      platform = 'Nintendo Game Boy Color';
+      break;
+    case 'genesis':
+      platform = 'Sega Genesis';
+      break;
+    case 'genesiswide':
+      platform = 'Sega Genesis';
+      break;
+    case 'gx4000':
+      platform = 'Amstrad GX4000';
+      break;
+    case 'intellivision':
+      platform = 'Mattel Intellivision';
+      break;
+    case 'mame':
+      platform = 'Arcade';
+      break;
+    case 'mastersystem':
+      platform = 'Sega Master System';
+      break;
+    case 'megacd':
+      platform = 'Sega CD';
+      break;
+    case 'megacdjp':
+      platform = 'Sega CD';
+      break;
+    case 'megadrive':
+      platform = 'Sega Genesis';
+      break;
+    case 'megadrivejp':
+      platform = 'Sega Genesis';
+      break;
+    case 'megaduck':
+      platform = 'Mega Duck';
+      break;
+    case 'model2':
+      platform = 'Sega Model 2';
+      break;
+    case 'model3':
+      platform = 'Sega Model 3';
+      break;
+    case 'msx':
+      platform = 'Microsoft MSX';
+      break;
+    case 'msx1':
+      platform = 'Microsoft MSX';
+      break;
+    case 'msx2':
+      platform = 'Microsoft MSX2';
+      break;
+    case 'msxturbor':
+      platform = 'Microsoft MSX2+';
+      break;
+    case 'mugen':
+      platform = 'MUGEN';
+      break;
+    case 'n64':
+      platform = 'Nintendo 64';
+      break;
+    case 'n64dd':
+      platform = 'Nintendo 64DD';
+      break;
+    case 'naomi':
+      platform = 'Sega Naomi';
+      break;
+    case 'naomi2':
+      platform = 'Sega Naomi 2';
+      break;
+    case 'n3ds':
+      platform = 'Nintendo 3DS';
+      break;
+    case 'nds':
+      platform = 'Nintendo DS';
+      break;
+    case 'neogeo':
+      platform = 'SNK Neo Geo AES';
+      break;
+    case 'neogeocd':
+      platform = 'SNK Neo Geo CD';
+      break;
+    case 'neogeocdjp':
+      platform = 'SNK Neo Geo CD';
+      break;
+    case 'nes':
+      platform = 'Nintendo Entertainment System';
+      break;
+    case 'ngp':
+      platform = 'SNK Neo Geo Pocket';
+      break;
+    case 'ngpc':
+      platform = 'SNK Neo Geo Pocket Color';
+      break;
+    case 'openbor':
+      platform = 'OpenBOR';
+      break;
+    case 'pcengine':
+      platform = 'NEC TurboGrafx-16';
+      break;
+    case 'pcenginecd':
+      platform = 'NEC TurboGrafx-CD';
+      break;
+    case 'pokemini':
+      platform = 'Nintendo Pokemon Mini';
+      break;
+    case 'primehacks':
+      platform = 'Nintendo Wii';
+      break;
+    case 'ps2':
+      platform = 'Sony Playstation 2';
+      break;
+    case 'ps3':
+      platform = 'Sony Playstation 3';
+      break;
+    case 'psp':
+      platform = 'Sony PSP';
+      break;
+    case 'psvita':
+      platform = 'Sony Playstation Vita';
+      break;
+    case 'psx':
+      platform = 'Sony Playstation';
+      break;
+    case 'quake':
+      platform = 'MS-DOS';
+      break;
+    case 'saturn':
+      platform = 'Sega Saturn';
+      break;
+    case 'saturnjp':
+      platform = 'Sega Saturn';
+      break;
+    case 'scummvm':
+      platform = 'ScummVM';
+      break;
+    case 'sega32x':
+      platform = 'Sega 32X';
+      break;
+    case 'sega32xjp':
+      platform = 'Sega 32X';
+      break;
+    case 'sega32xna':
+      platform = 'Sega 32X';
+      break;
+    case 'segacd':
+      platform = 'Sega CD';
+      break;
+    case 'sg-1000':
+      platform = 'Sega SG-1000';
+      break;
+    case 'snes':
+      platform = 'Super Nintendo Entertainment System';
+      break;
+    case 'sneshd':
+      platform = 'Super Nintendo Entertainment System';
+      break;
+    case 'snesna':
+      platform = 'Super Nintendo Entertainment System';
+      break;
+    case 'supergrafx':
+      platform = 'NEC TurboGrafx-16';
+      break;
+    case 'switch':
+      platform = 'Nintendo Switch';
+      break;
+    case 'tg-cd':
+      platform = 'NEC TurboGrafx-CD';
+      break;
+    case 'tg16':
+      platform = 'NEC TurboGrafx-16';
+      break;
+    case 'ti99':
+      platform = 'Texas Instruments TI 99 4A';
+      break;
+    case 'trs-80':
+      platform = 'Tandy TRS-80';
+      break;
+    case 'vic20':
+      platform = 'Commodore VIC-20';
+      break;
+    case 'virtualboy':
+      platform = 'Nintendo Virtual Boy';
+      break;
+    case 'wii':
+      platform = 'Nintendo Wii';
+      break;
+    case 'wiiu':
+      platform = 'Nintendo Wii U';
+      break;
+    case 'wonderswan':
+      platform = 'WonderSwan';
+      break;
+    case 'wonderswancolor':
+      platform = 'WonderSwan Color';
+      break;
+    case 'x1':
+      platform = 'Sharp X1';
+      break;
+    case 'x68000':
+      platform = 'Sharp X68000';
+      break;
+    case 'xbox':
+      platform = 'Microsoft Xbox';
+      break;
+    case 'xbox360':
+      platform = 'Microsoft Xbox 360';
+      break;
+    case 'zx81':
+      platform = 'Sinclair ZX-81';
+      break;
+    case 'zxspectrum':
+      platform = 'Sinclair ZX Spectrum';
+      break;
+    // Agrega más casos según sea necesario
+    default:
+      console.log('unknown system, exiting.');
+      process.exit();
+  }
+
+  return platform;
+}
 
 function processFolder(folderPath, depth) {
   const files = fs.readdirSync(folderPath);
@@ -110,12 +480,65 @@ function processFolder(folderPath, depth) {
           const systemName = path.basename(romsPath);
           const relativePath = path.relative(romsPath, folderPath);
 
-          console.log({ gameFilePath });
-
           gameList[folderName][i] = {
             name: gameFile,
             path: path.join(romsPath, relativePath, gameFile),
           };
+
+          const romName = gameFile;
+          const romNameNoExtension = romName.replace(/\..*/, '');
+
+          let romNameTrimmed = romNameNoExtension
+            .replace(/\.nkit/g, '')
+            .replace(/!/g, '')
+            .replace(/&/g, 'and')
+            .replace(/Disc /g, '')
+            .replace(/Rev /g, '')
+            .replace(/\([^()]*\)/g, '')
+            .replace(/\[[A-z0-9!+]*\]/g, '')
+            .replace(/ - /g, '  ')
+            .replace(/-/g, '  ');
+
+          // Put "The" at the beginning of the rom name
+          if (romNameTrimmed.includes(', The')) {
+            romNameTrimmed = romNameTrimmed.replace(/, The/, '');
+            romNameTrimmed = `The ${romNameTrimmed}`;
+          }
+
+          const platform = getLaunchboxAlias(folderName);
+          let databaseID;
+
+          const query =
+            'SELECT DatabaseID as databaseid FROM Games WHERE Name = ? and Platform = ? LIMIT 1';
+          // Ejecutar la consulta
+          db.all(query, [romNameTrimmed, platform], (err, rows) => {
+            const obj = rows[0];
+            if (obj) {
+              databaseID = obj.databaseid;
+            }
+            const insertQuery =
+              'INSERT OR IGNORE INTO roms (file_name, name, system,platform, path, databaseID) VALUES (?, ?, ?, ?, ?, ?)';
+            db.run(
+              insertQuery,
+              [
+                gameFile,
+                romNameTrimmed,
+                folderName,
+                platform,
+                gameFilePath,
+                databaseID,
+              ],
+              function (err) {
+                if (err) {
+                  return console.error('Error al insertar datos:', err.message);
+                }
+
+                console.log(
+                  `Fila insertada con éxito. ID de la fila: ${this.lastID}`,
+                );
+              },
+            );
+          });
 
           // Incrementar contador de juegos
           systems[folderName].games++;
@@ -131,7 +554,6 @@ function processFolder(folderPath, depth) {
     }
   });
 }
-
 // Iniciar el proceso con la carpeta principal
 processFolder(romsPath, maxDepth);
 
@@ -141,11 +563,52 @@ ipcMain.on('get-systems', async (event) => {
 
 ipcMain.on('get-games', async (event, system) => {
   if (system !== undefined) {
-    console.log(gameList[system]);
-    event.reply(
-      'get-games',
-      JSON.stringify(Object.values(gameList[system]), null, 2),
-    );
+    const query = 'SELECT * FROM roms WHERE system = ?';
+    const platform = getLaunchboxAlias(system);
+    // Ejecutar la consulta
+    db.all(query, [system], (err, rows) => {
+      if (err) {
+        return console.error('Error al realizar la consulta:', err.message);
+      }
+
+      const resultsArray = rows.map((row) => ({ ...row }));
+
+      //       resultsArray.forEach((item, index) => {
+      //         const { name } = item;
+      //
+      //         // We retrieve the img ID
+      //         query = `SELECT DatabaseID FROM Games WHERE Platform = ? AND Name LIKE ? LIMIT 1`;
+      //         const likePattern = `%${name}%`;
+      //         db.all(query, [platform, likePattern], (err, rows) => {
+      //           if (err) {
+      //             return console.error('Error al realizar la consulta:', err.message);
+      //           }
+      //
+      //         });
+      //         //
+      //         //     const localImagePath = `${localImageDirectory}/imagen_${index + 1}.jpg`;
+      //         //
+      //         //     // Comprobar si la imagen existe localmente
+      //         //     if (imageExists(localImagePath)) {
+      //         //         console.log(`La imagen ${index + 1} ya existe localmente.`);
+      //         //     } else {
+      //         //         // Descargar la imagen si no existe
+      //         //         downloadImage(imageUrl, localImagePath);
+      //         //     }
+      //       });
+
+      //       db.all(query, [system], (err, rows) => {});
+      //
+      //       if (imageExists(localImagePath)) {
+      //         console.log('La imagen ya existe localmente.');
+      //       } else {
+      //         // Descargar la imagen si no existe
+      //         downloadImage(imageUrl, localImagePath);
+      //       }
+      // console.log(resultsArray);
+      const resultsJSON = JSON.stringify(resultsArray, null, 2);
+      event.reply('get-games', resultsJSON);
+    });
   }
 });
 
