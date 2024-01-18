@@ -18,15 +18,16 @@ import { resolveHtmlPath } from './util';
 /* custom */
 const sqlite3 = require('sqlite3').verbose();
 
-const dbPath = path.join(__dirname, 'sqlite', 'database.db');
-const db = new sqlite3.Database(dbPath);
-
 const os = require('os');
 const fs = require('fs');
 const axios = require('axios');
 const systemsData = require('../data/systems.json');
 
 const homeUser = os.homedir();
+
+const dbPath = `${homeUser}/emudeck/launcher/sqlite/database.db`;
+// const dbPath = path.join(__dirname, 'sqlite', 'database.db');
+const db = new sqlite3.Database(dbPath);
 
 // Settings to JS vars
 let settingsPath;

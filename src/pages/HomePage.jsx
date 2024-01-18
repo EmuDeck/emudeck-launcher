@@ -1,5 +1,12 @@
-import React, { useCallback, useEffect, useState, useRef } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useContext,
+  useRef,
+  useState,
+} from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { GlobalContext } from 'context/globalContext';
 import { useFocusable, init, FocusContext, setKeyMap } from '../spatial';
 
 init({
@@ -47,15 +54,17 @@ function HomePage({ focusKey: focusKeyParam }) {
   const navigate = useNavigate();
   const [statePage, setStatePage] = useState({ systems: null, themeCSS: null });
   const { systems, themeCSS } = statePage;
-
+  const { state, setState } = useContext(GlobalContext);
+  const { gamepad } = state;
   useEffect(() => {
     console.log('pad?');
     ipcChannel.sendMessage('get-theme');
     ipcChannel.once('get-theme', (themeCSS) => {
       setStatePage({ ...statePage, themeCSS });
     });
-    if ('getGamepads' in navigator) {
+    if (!gamepad && 'getGamepads' in navigator) {
       console.log('pad detected');
+      setState({ gamepad: true });
       // Almacena el estado anterior de los botones
       let previousButtonState = {};
 
@@ -81,7 +90,6 @@ function HomePage({ focusKey: focusKeyParam }) {
 
       // Función para manejar la detección de botones
       function handleGamepad() {
-        console.log('pp');
         const gamepads = navigator.getGamepads();
 
         for (const gamepad of gamepads) {
@@ -100,7 +108,6 @@ function HomePage({ focusKey: focusKeyParam }) {
                 if (buttonState[buttonIndex]) {
                   if (buttonIndex === 'button1') {
                     navigate(-1);
-                    return;
                   }
 
                   console.log(`Botón ${buttonIndex} presionado`);
@@ -197,51 +204,7 @@ function HomePage({ focusKey: focusKeyParam }) {
                 return (
                   <System
                     data={item}
-                    key={i}
-                    onFocus={onAssetFocus}
-                    onEnterPress={() => onAssetPress(item)}
-                  />
-                );
-              })}
-            {systems &&
-              systems.map((item, i) => {
-                return (
-                  <System
-                    data={item}
-                    key={i}
-                    onFocus={onAssetFocus}
-                    onEnterPress={() => onAssetPress(item)}
-                  />
-                );
-              })}{' '}
-            {systems &&
-              systems.map((item, i) => {
-                return (
-                  <System
-                    data={item}
-                    key={i}
-                    onFocus={onAssetFocus}
-                    onEnterPress={() => onAssetPress(item)}
-                  />
-                );
-              })}{' '}
-            {systems &&
-              systems.map((item, i) => {
-                return (
-                  <System
-                    data={item}
-                    key={i}
-                    onFocus={onAssetFocus}
-                    onEnterPress={() => onAssetPress(item)}
-                  />
-                );
-              })}{' '}
-            {systems &&
-              systems.map((item, i) => {
-                return (
-                  <System
-                    data={item}
-                    key={i}
+                    key={item.name}
                     onFocus={onAssetFocus}
                     onEnterPress={() => onAssetPress(item)}
                   />
