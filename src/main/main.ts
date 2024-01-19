@@ -445,7 +445,7 @@ function processFolder(folderPath, depth) {
       ].controller = `file://${homeUser}/emudeck/launcher/themes/enabled/controllers/${folderName}.png`;
       systems[
         folderName
-      ].logo = `file://${homeUser}/emudeck/launcher/themes/enabled/logos/${folderName}.jpg`;
+      ].logo = `file://${homeUser}/emudeck/launcher/themes/enabled/logos/${folderName}.svg`;
       // Crear entrada en gameList para la carpeta actual
       gameList[folderName] = {};
 
