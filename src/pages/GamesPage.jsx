@@ -99,7 +99,7 @@ function GamesPage({ focusKey: focusKeyParam }) {
       <style>{themeCSS}</style>
       {/* <div>Games for {system}</div> */}
       <FocusContext.Provider value={focusKey}>
-        <div ref={ref}>
+        <div ref={ref} className={system}>
           <div
             ref={scrollingRef}
             className={`games ${
@@ -109,19 +109,7 @@ function GamesPage({ focusKey: focusKeyParam }) {
             {games &&
               games.map((item, i) => {
                 return <Game data={item} key={i} onFocus={onAssetFocus} />;
-              })}{' '}
-            {games &&
-              games.map((item, i) => {
-                return <Game data={item} key={i} onFocus={onAssetFocus} />;
-              })}{' '}
-            {games &&
-              games.map((item, i) => {
-                if (i >= 2) {
-                  return;
-                }
-                return i;
-                return <Game data={item} key={i} onFocus={onAssetFocus} />;
-              })}{' '}
+              })}
           </div>
         </div>
       </FocusContext.Provider>

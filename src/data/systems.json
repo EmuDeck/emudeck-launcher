@@ -4,6 +4,11 @@
     "excerpt": "1990  ·  16-bit Console",
     "description": "Nintendo's second home console introduced advanced graphics and sound capabilities compared with other systems at the time"
   },
+  "gb": {
+    "name": "Nintendo GameBoy",
+    "excerpt": "1990  ·  Handheld",
+    "description": "Nintendo's second home console introduced advanced graphics and sound capabilities compared with other systems at the time"
+  },
   "genesis": {
     "name": "Sega Genesis",
     "excerpt": "1990  ·  16-bit Console",

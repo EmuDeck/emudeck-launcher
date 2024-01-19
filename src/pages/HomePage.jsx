@@ -140,12 +140,14 @@ function HomePage({ focusKey: focusKeyParam }) {
     }
   }, []);
   useEffect(() => {
-    ipcChannel.sendMessage('get-systems');
-    ipcChannel.once('get-systems', (systemsTemp) => {
-      const json = JSON.parse(systemsTemp);
-      const systemsArray = Object.values(json);
-      setStatePage({ ...statePage, systems: systemsArray });
-    });
+    if (themeCSS) {
+      ipcChannel.sendMessage('get-systems');
+      ipcChannel.once('get-systems', (systemsTemp) => {
+        const json = JSON.parse(systemsTemp);
+        const systemsArray = Object.values(json);
+        setStatePage({ ...statePage, systems: systemsArray });
+      });
+    }
   }, [themeCSS]);
 
   const scrollingRef = useRef(null);
@@ -199,7 +201,8 @@ function HomePage({ focusKey: focusKeyParam }) {
               hasFocusedChild ? 'systems-focused' : 'systems-unfocused'
             }`}
           >
-            {systems &&
+            {themeCSS &&
+              systems &&
               systems.map((item, i) => {
                 return (
                   <System

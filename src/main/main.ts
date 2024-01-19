@@ -59,25 +59,6 @@ const maxDepth = 2; // Puedes ajustar este valor según tu necesidad
 const systems = {};
 const gameList = {};
 
-function imageExists(filePath) {
-  try {
-    fs.accessSync(filePath, fs.constants.F_OK);
-    return true;
-  } catch (err) {
-    return false;
-  }
-}
-
-async function downloadImage(url, localPath) {
-  try {
-    const response = await axios.get(url, { responseType: 'arraybuffer' });
-    fs.writeFileSync(localPath, Buffer.from(response.data), 'binary');
-    console.log('Imagen descargada exitosamente.');
-  } catch (error) {
-    console.error('Error al descargar la imagen:', error.message);
-  }
-}
-
 function getLaunchboxAlias(system) {
   let platform;
 
@@ -424,7 +405,7 @@ function getLaunchboxAlias(system) {
   return platform;
 }
 
-function processFolder(folderPath, depth) {
+function processFolder(folderPath, depth, save) {
   const files = fs.readdirSync(folderPath);
 
   files.forEach((file) => {
@@ -433,7 +414,7 @@ function processFolder(folderPath, depth) {
 
     if (stat.isDirectory()) {
       // Procesar carpetas de forma recursiva
-      processFolder(filePath, depth + 1);
+      processFolder(filePath, depth + 1, save);
     } else if (stat.isFile() && file.toLowerCase() === 'systeminfo.txt') {
       // Leer systeminfo.txt y extraer extensiones permitidas
       const systemInfoContent = fs.readFileSync(filePath, 'utf8');
@@ -478,7 +459,6 @@ function processFolder(folderPath, depth) {
           !gameFile.startsWith('.')
         ) {
           // Añadir entrada en gameList
-          const systemName = path.basename(romsPath);
           const relativePath = path.relative(romsPath, folderPath);
 
           gameList[folderName][i] = {
@@ -506,20 +486,13 @@ function processFolder(folderPath, depth) {
             romNameTrimmed = `The ${romNameTrimmed}`;
           }
 
+          romNameTrimmed = romNameTrimmed.trimEnd();
+
           const platform = getLaunchboxAlias(folderName);
           let databaseID;
           let artbox;
 
-          const query =
-            'SELECT Games.DatabaseID as databaseid, Images.FileName as filename FROM Games JOIN Images ON Images.DatabaseID = Games.DatabaseID WHERE Type = "Screenshot - Gameplay" AND Name = ? and Platform = ? LIMIT 1';
-
-          // Ejecutar la consulta
-          db.all(query, [romNameTrimmed, platform], (err, rows) => {
-            const obj = rows[0];
-            if (obj) {
-              databaseID = obj.databaseid;
-              artbox = obj.filename;
-            }
+          if (save) {
             const insertQuery =
               'INSERT OR IGNORE INTO roms (file_name, name, system,platform, path, databaseID, artbox) VALUES (?, ?, ?, ?, ?, ?, ?)';
             db.run(
@@ -543,7 +516,7 @@ function processFolder(folderPath, depth) {
                 );
               },
             );
-          });
+          }
 
           // Incrementar contador de juegos
           systems[folderName].games++;
@@ -560,7 +533,7 @@ function processFolder(folderPath, depth) {
   });
 }
 // Iniciar el proceso con la carpeta principal
-processFolder(romsPath, maxDepth);
+processFolder(romsPath, maxDepth, false);
 
 ipcMain.on('get-systems', async (event) => {
   event.reply('get-systems', JSON.stringify(Object.values(systems), null, 2));
@@ -578,39 +551,6 @@ ipcMain.on('get-games', async (event, system) => {
 
       const resultsArray = rows.map((row) => ({ ...row }));
 
-      //       resultsArray.forEach((item, index) => {
-      //         const { name } = item;
-      //
-      //         // We retrieve the img ID
-      //         query = `SELECT DatabaseID FROM Games WHERE Platform = ? AND Name LIKE ? LIMIT 1`;
-      //         const likePattern = `%${name}%`;
-      //         db.all(query, [platform, likePattern], (err, rows) => {
-      //           if (err) {
-      //             return console.error('Error al realizar la consulta:', err.message);
-      //           }
-      //
-      //         });
-      //         //
-      //         //     const localImagePath = `${localImageDirectory}/imagen_${index + 1}.jpg`;
-      //         //
-      //         //     // Comprobar si la imagen existe localmente
-      //         //     if (imageExists(localImagePath)) {
-      //         //         console.log(`La imagen ${index + 1} ya existe localmente.`);
-      //         //     } else {
-      //         //         // Descargar la imagen si no existe
-      //         //         downloadImage(imageUrl, localImagePath);
-      //         //     }
-      //       });
-
-      //       db.all(query, [system], (err, rows) => {});
-      //
-      //       if (imageExists(localImagePath)) {
-      //         console.log('La imagen ya existe localmente.');
-      //       } else {
-      //         // Descargar la imagen si no existe
-      //         downloadImage(imageUrl, localImagePath);
-      //       }
-      // console.log(resultsArray);
       const resultsJSON = JSON.stringify(resultsArray, null, 2);
       event.reply('get-games', resultsJSON);
     });
