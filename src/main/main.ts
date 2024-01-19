@@ -12,12 +12,13 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import { exec, spawn } from 'child_process';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
 /* custom */
-const sqlite3 = require('sqlite3').verbose();
 
+const sqlite3 = require('sqlite3').verbose();
 const os = require('os');
 const fs = require('fs');
 const axios = require('axios');
@@ -28,6 +29,13 @@ const homeUser = os.homedir();
 const dbPath = `${homeUser}/emudeck/launcher/sqlite/database.db`;
 // const dbPath = path.join(__dirname, 'sqlite', 'database.db');
 const db = new sqlite3.Database(dbPath);
+
+let shellType: string;
+if (os.platform().includes('win32')) {
+  shellType = {};
+} else {
+  shellType = { shell: '/bin/bash' };
+}
 
 // Settings to JS vars
 let settingsPath;
@@ -58,25 +66,6 @@ const maxDepth = 2; // Puedes ajustar este valor según tu necesidad
 
 const systems = {};
 const gameList = {};
-
-function imageExists(filePath) {
-  try {
-    fs.accessSync(filePath, fs.constants.F_OK);
-    return true;
-  } catch (err) {
-    return false;
-  }
-}
-
-async function downloadImage(url, localPath) {
-  try {
-    const response = await axios.get(url, { responseType: 'arraybuffer' });
-    fs.writeFileSync(localPath, Buffer.from(response.data), 'binary');
-    console.log('Imagen descargada exitosamente.');
-  } catch (error) {
-    console.error('Error al descargar la imagen:', error.message);
-  }
-}
 
 function getLaunchboxAlias(system) {
   let platform;
@@ -596,6 +585,25 @@ function processFolder(folderPath, depth) {
 ipcMain.on('get-systems', async (event) => {
   processFolder(romsPath, maxDepth);
   event.reply('get-systems', JSON.stringify(Object.values(systems), null, 2));
+});
+
+ipcMain.on('load-game', async (event, game) => {
+  const { system, path } = game[0];
+  const filePath = `${romsPath}/${system}/metadata.txt`;
+  // We extract the launch parameter
+  const systemInfoContent = fs.readFileSync(filePath, 'utf8');
+  let launchParameter = systemInfoContent
+    .split('\n')
+    .filter((line) => line.trim().startsWith('launch:'))
+    .map((line) => line.trim().substring(8));
+  launchParameter = launchParameter[0];
+  launchParameter = launchParameter.replace('{file.path}', `"${path}"`);
+
+  return exec(`${launchParameter}`, shellType, (error, stdout, stderr) => {
+    event.reply('load-game', error, stdout, stderr);
+  });
+
+  // event.reply('get-systems', JSON.stringify(Object.values(systems), null, 2));
 });
 
 ipcMain.on('get-games', async (event, system) => {

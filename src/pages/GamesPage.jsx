@@ -94,6 +94,13 @@ function GamesPage({ focusKey: focusKeyParam }) {
     focusSelf();
   }, [games]);
 
+  const loadGame = (item) => {
+    ipcChannel.sendMessage('load-game', [item]);
+    ipcChannel.once('load-game', (error, stdout, stderr) => {
+      console.log({ error, stdout, stderr });
+    });
+  };
+
   return (
     <>
       <style>{themeCSS}</style>
@@ -108,7 +115,14 @@ function GamesPage({ focusKey: focusKeyParam }) {
           >
             {games &&
               games.map((item, i) => {
-                return <Game data={item} key={i} onFocus={onAssetFocus} />;
+                return (
+                  <Game
+                    data={item}
+                    key={i}
+                    onFocus={onAssetFocus}
+                    onEnterPress={() => loadGame(item)}
+                  />
+                );
               })}
           </div>
         </div>
