@@ -505,6 +505,8 @@ function processFolder(folderPath, depth) {
             romNameTrimmed = `The ${romNameTrimmed}`;
           }
 
+          romNameTrimmed = romNameTrimmed.trimEnd();
+
           const platform = getLaunchboxAlias(folderName);
           let databaseID;
           let artbox;
@@ -589,9 +591,10 @@ function processFolder(folderPath, depth) {
   });
 }
 // Iniciar el proceso con la carpeta principal
-processFolder(romsPath, maxDepth);
+// processFolder(romsPath, maxDepth);
 
 ipcMain.on('get-systems', async (event) => {
+  processFolder(romsPath, maxDepth);
   event.reply('get-systems', JSON.stringify(Object.values(systems), null, 2));
 });
 
