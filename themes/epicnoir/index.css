@@ -231,3 +231,7 @@ img.games__bg:after {
   background: rgba(93, 255, 77, 0.3);
   z-index: 1;
 }
+
+.systems__logo {
+  display: none;
+}
