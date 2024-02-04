@@ -39,6 +39,7 @@ jobs:
         run: |
           npm install pg-hstore
           npm install sequelize
+          npm install sequelize-cli
           npm ci
 
       - name: Publish releases
