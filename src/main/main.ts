@@ -17,7 +17,7 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
 /* custom */
-
+app.commandLine.appendSwitch('disk-cache-size', '10737418240');
 const sqlite3 = require('sqlite3').verbose();
 const os = require('os');
 const fs = require('fs');
@@ -496,6 +496,8 @@ function processFolder(folderPath, depth) {
 
           romNameTrimmed = romNameTrimmed.trimEnd();
 
+          const romNameForSearch = romNameTrimmed.replace('The ', '');
+
           const platform = getLaunchboxAlias(folderName);
           let databaseID;
           let artbox;
@@ -507,8 +509,6 @@ function processFolder(folderPath, depth) {
             (err) => {
               if (err) {
                 console.error('Error creating dir:', err);
-              } else {
-                console.log('Dir created');
               }
             },
           );
@@ -517,51 +517,48 @@ function processFolder(folderPath, depth) {
           fs.access(fileCachePath, fs.constants.F_OK, (err) => {
             if (err) {
               const query =
-                'SELECT Games.DatabaseID as databaseid, Images.FileName as filename FROM Games JOIN Images ON Images.DatabaseID = Games.DatabaseID WHERE Type = "Screenshot - Gameplay" AND Name = ? and Platform = ? LIMIT 1';
+                'SELECT Games.DatabaseID as databaseid, Images.FileName as filename FROM Games JOIN Images ON Images.DatabaseID = Games.DatabaseID WHERE Type = "Screenshot - Gameplay" AND Name LIKE ? and Platform = ? LIMIT 1';
 
               // Ejecutar la consulta
-              db.all(query, [romNameTrimmed, platform], (err, rows) => {
-                const obj = rows[0];
-                if (obj) {
-                  databaseID = obj.databaseid;
-                  artbox = obj.filename;
-                }
-                const insertQuery =
-                  'INSERT OR IGNORE INTO roms (file_name, name, system,platform, path, databaseID, artbox) VALUES (?, ?, ?, ?, ?, ?, ?)';
-                db.run(
-                  insertQuery,
-                  [
-                    gameFile,
-                    romNameTrimmed,
-                    folderName,
-                    platform,
-                    gameFilePath,
-                    databaseID,
-                    artbox,
-                  ],
-                  function (err) {
-                    if (err) {
-                      return console.error(
-                        'Error al insertar datos:',
-                        err.message,
-                      );
-                    }
-                    // We cache the file
-                    fs.writeFile(fileCachePath, '', (err) => {
+              db.all(
+                query,
+                [`%${romNameForSearch}%`, platform],
+                (err, rows) => {
+                  const obj = rows[0];
+                  if (obj) {
+                    databaseID = obj.databaseid;
+                    artbox = obj.filename;
+                  }
+                  const insertQuery =
+                    'INSERT OR IGNORE INTO roms (file_name, name, system,platform, path, databaseID, artbox) VALUES (?, ?, ?, ?, ?, ?, ?)';
+                  db.run(
+                    insertQuery,
+                    [
+                      gameFile,
+                      romNameTrimmed,
+                      folderName,
+                      platform,
+                      gameFilePath,
+                      databaseID,
+                      artbox,
+                    ],
+                    function (err) {
                       if (err) {
-                        console.error('Error writing the file:', err);
-                      } else {
-                        console.log('File created successfully.');
+                        return console.error(
+                          'Error al insertar datos:',
+                          err.message,
+                        );
                       }
-                    });
-                    console.log(
-                      `Fila insertada con éxito. ID de la fila: ${this.lastID}`,
-                    );
-                  },
-                );
-              });
-            } else {
-              console.log('El archivo existe.');
+                      // We cache the file
+                      fs.writeFile(fileCachePath, '', (err) => {
+                        if (err) {
+                          console.error('Error writing the file:', err);
+                        }
+                      });
+                    },
+                  );
+                },
+              );
             }
           });
 
