@@ -25,15 +25,33 @@ function Game({ data, onEnterPress, onFocus }) {
       focused={focused}
       className={`games__system ${focused ? 'games__system--focused' : ''}`}
     >
-      <img
-        className="games__bg"
-        src={`https://images.launchbox-app.com/${item.artbox}`}
-        alt=""
-      />
-      <div className="games__name">
-        {name}
-        {isTextCut && '...'}
-      </div>
+      {!item.logo && (
+        <div className="games__name">
+          {name}
+          {isTextCut && '...'}
+        </div>
+      )}
+      {item.box && (
+        <img
+          className="games__bg"
+          src={`https://images.launchbox-app.com/${item.box}`}
+          alt=""
+        />
+      )}
+      {item.screenshot && (
+        <img
+          className="games__bg games__screenshot"
+          src={`https://images.launchbox-app.com/${item.screenshot}`}
+          alt=""
+        />
+      )}
+      {item.logo && (
+        <img
+          className="games__bg games__logo"
+          src={`https://images.launchbox-app.com/${item.logo}`}
+          alt=""
+        />
+      )}
     </Link>
   );
 }

@@ -170,14 +170,13 @@ img.games__bg:after {
 
 .games__name {
   font-size: 3vw;
-  padding-bottom: 20px;
   font-family: 'Bebas';
   transition: 1s;
   opacity: 0.8;
   text-align: center;
-  padding-top: 2vw;
-  z-index: 2;
-  position: relative;
+  z-index: 3;
+  margin: auto;
+  padding: 20px;
 }
 
 .games__system--focused .games__name {
@@ -208,7 +207,7 @@ img.games__bg:after {
 
 .games__bg {
   position: absolute;
-  z-index: -1;
+  z-index: 2;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -216,11 +215,22 @@ img.games__bg:after {
   left: 0;
 }
 
+.games__logo {
+  max-width: 70%;
+  height: auto;
+  left: 0;
+  right: 0;
+  margin: auto;
+  object-fit: unset;
+  bottom: 0;
+  top: 0;
+}
+
 .games__controller {
   max-width: 30vw;
 }
 
-.gb .games__system:after {
+.gb .games__system .games__screenshot:after {
   content: '';
   position: absolute;
   left: 0;

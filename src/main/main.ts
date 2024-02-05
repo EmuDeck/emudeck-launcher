@@ -413,6 +413,89 @@ function getLaunchboxAlias(system) {
   return platform;
 }
 
+const insertIMG = (
+  typeImage,
+  typeIMG,
+  gameFile,
+  romNameTrimmed,
+  folderName,
+  platform,
+  gameFilePath,
+  romNameForSearch,
+  fileCachePath,
+) => {
+  const query = `SELECT Games.DatabaseID as databaseid, Images.FileName as filename FROM Games JOIN Images ON Images.DatabaseID = Games.DatabaseID WHERE Type = "${typeImage}" AND Name LIKE ? and Platform = ? LIMIT 1`;
+
+  // Ejecutar la consulta
+  db.all(query, [`%${romNameForSearch}%`, platform], (err, rows) => {
+    const obj = rows[0];
+    if (obj) {
+      const databaseID = obj.databaseid;
+      const screenshot = obj.filename;
+
+      const insertQuery = `INSERT OR IGNORE INTO roms (file_name, name, system,platform, path, databaseID) VALUES (?, ?, ?, ?, ?, ?)`;
+      db.run(
+        insertQuery,
+        [
+          gameFile,
+          romNameTrimmed,
+          folderName,
+          platform,
+          gameFilePath,
+          databaseID,
+        ],
+        function (err) {
+          if (err) {
+            return console.error('Error al insertar datos:', err.message);
+          }
+          // We cache the file
+          fs.writeFile(fileCachePath, '', (err) => {
+            if (err) {
+              console.error('Error writing the file:', err);
+            }
+          });
+        },
+      );
+    }
+  });
+};
+
+const updateIMG = (
+  typeImage,
+  typeIMG,
+  gameFile,
+  romNameTrimmed,
+  folderName,
+  platform,
+  gameFilePath,
+  romNameForSearch,
+  fileCachePath,
+) => {
+  const query = `SELECT Games.DatabaseID as databaseid, Images.FileName as filename FROM Games JOIN Images ON Images.DatabaseID = Games.DatabaseID WHERE Type = "${typeImage}" AND Name LIKE ? and Platform = ? LIMIT 1`;
+
+  // Ejecutar la consulta
+  db.all(query, [`%${romNameForSearch}%`, platform], (err, rows) => {
+    const obj = rows[0];
+    if (obj) {
+      const databaseID = obj.databaseid;
+      const img = obj.filename;
+
+      const insertQueryImgs = `UPDATE roms SET ${typeIMG} = ? WHERE databaseID = ${databaseID}`;
+      db.run(insertQueryImgs, [img], function (err) {
+        if (err) {
+          return console.error('Error al actualizar datos:', err.message);
+        }
+        // We cache the file
+        fs.writeFile(fileCachePath, '', (err) => {
+          if (err) {
+            console.error('Error writing the file:', err);
+          }
+        });
+      });
+    }
+  });
+};
+
 function processFolder(folderPath, depth) {
   const files = fs.readdirSync(folderPath);
 
@@ -501,8 +584,6 @@ function processFolder(folderPath, depth) {
             const romNameForSearch = romNameTrimmed.replace('The ', '');
 
             const platform = getLaunchboxAlias(folderName);
-            let databaseID;
-            let artbox;
 
             // Cache
             fs.mkdir(
@@ -518,48 +599,52 @@ function processFolder(folderPath, depth) {
 
             fs.access(fileCachePath, fs.constants.F_OK, (err) => {
               if (err) {
-                const query =
-                  'SELECT Games.DatabaseID as databaseid, Images.FileName as filename FROM Games JOIN Images ON Images.DatabaseID = Games.DatabaseID WHERE Type = "Screenshot - Gameplay" AND Name LIKE ? and Platform = ? LIMIT 1';
-
-                // Ejecutar la consulta
-                db.all(
-                  query,
-                  [`%${romNameForSearch}%`, platform],
-                  (err, rows) => {
-                    const obj = rows[0];
-                    if (obj) {
-                      databaseID = obj.databaseid;
-                      artbox = obj.filename;
-                    }
-                    const insertQuery =
-                      'INSERT OR IGNORE INTO roms (file_name, name, system,platform, path, databaseID, artbox) VALUES (?, ?, ?, ?, ?, ?, ?)';
-                    db.run(
-                      insertQuery,
-                      [
-                        gameFile,
-                        romNameTrimmed,
-                        folderName,
-                        platform,
-                        gameFilePath,
-                        databaseID,
-                        artbox,
-                      ],
-                      function (err) {
-                        if (err) {
-                          return console.error(
-                            'Error al insertar datos:',
-                            err.message,
-                          );
-                        }
-                        // We cache the file
-                        fs.writeFile(fileCachePath, '', (err) => {
-                          if (err) {
-                            console.error('Error writing the file:', err);
-                          }
-                        });
-                      },
-                    );
-                  },
+                insertIMG(
+                  'Screenshot - Gameplay',
+                  'screenshot',
+                  gameFile,
+                  romNameTrimmed,
+                  folderName,
+                  platform,
+                  gameFilePath,
+                  romNameForSearch,
+                  fileCachePath,
+                );
+                // Screenshot
+                updateIMG(
+                  'Screenshot - Gameplay',
+                  'screenshot',
+                  gameFile,
+                  romNameTrimmed,
+                  folderName,
+                  platform,
+                  gameFilePath,
+                  romNameForSearch,
+                  fileCachePath,
+                );
+                // Logo
+                updateIMG(
+                  'Clear Logo',
+                  'logo',
+                  gameFile,
+                  romNameTrimmed,
+                  folderName,
+                  platform,
+                  gameFilePath,
+                  romNameForSearch,
+                  fileCachePath,
+                );
+                // Box
+                updateIMG(
+                  'Box - Front',
+                  'box',
+                  gameFile,
+                  romNameTrimmed,
+                  folderName,
+                  platform,
+                  gameFilePath,
+                  romNameForSearch,
+                  fileCachePath,
                 );
               }
             });
