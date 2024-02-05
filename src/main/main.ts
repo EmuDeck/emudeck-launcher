@@ -418,161 +418,167 @@ function processFolder(folderPath, depth) {
 
   files.forEach((file) => {
     const filePath = path.join(folderPath, file);
-    const stat = fs.statSync(filePath);
 
-    if (stat.isDirectory()) {
-      // Procesar carpetas de forma recursiva
-      processFolder(filePath, depth + 1);
-    } else if (stat.isFile() && file.toLowerCase() === 'systeminfo.txt') {
-      // Leer systeminfo.txt y extraer extensiones permitidas
-      const systemInfoContent = fs.readFileSync(filePath, 'utf8');
-      const allowedExtensions = systemInfoContent
-        .split('\n')
-        .filter((line) => line.trim().startsWith('.'))
-        .map((line) => line.trim().substring(1));
+    try {
+      const stat = fs.statSync(filePath);
 
-      // Crear entrada en systems para la carpeta actual
-      const folderName = path.basename(folderPath);
-      systems[folderName] = { id: folderName, games: 0 };
-      const systemID = systems[folderName];
-      const systemData = systemsData[folderName];
-      systems[folderName] = { ...systemID, ...systemData };
-      systems[
-        folderName
-      ].poster = `file://${homeUser}/emudeck/launcher/themes/enabled/posters/${folderName}.jpg`;
-      systems[
-        folderName
-      ].controller = `file://${homeUser}/emudeck/launcher/themes/enabled/controllers/${folderName}.png`;
-      systems[
-        folderName
-      ].logo = `file://${homeUser}/emudeck/launcher/themes/enabled/logos/${folderName}.svg`;
-      // Crear entrada en gameList para la carpeta actual
-      gameList[folderName] = {};
+      if (stat.isDirectory()) {
+        // Procesar carpetas de forma recursiva
+        processFolder(filePath, depth + 1);
+      } else if (stat.isFile() && file.toLowerCase() === 'systeminfo.txt') {
+        // Leer systeminfo.txt y extraer extensiones permitidas
+        const systemInfoContent = fs.readFileSync(filePath, 'utf8');
+        const allowedExtensions = systemInfoContent
+          .split('\n')
+          .filter((line) => line.trim().startsWith('.'))
+          .map((line) => line.trim().substring(1));
 
-      // Recorrer archivos en la carpeta actual y verificar extensiones
-      const filesInFolder = fs.readdirSync(folderPath);
-      let i = 0;
-      filesInFolder.forEach((gameFile) => {
-        const gameFilePath = path.join(folderPath, gameFile);
-        const gameFileExt = `.${path
-          .extname(gameFile)
-          .toLowerCase()
-          .substring(1)}`;
+        // Crear entrada en systems para la carpeta actual
+        const folderName = path.basename(folderPath);
+        systems[folderName] = { id: folderName, games: 0 };
+        const systemID = systems[folderName];
+        const systemData = systemsData[folderName];
+        systems[folderName] = { ...systemID, ...systemData };
+        systems[
+          folderName
+        ].poster = `file://${homeUser}/emudeck/launcher/themes/enabled/posters/${folderName}.jpg`;
+        systems[
+          folderName
+        ].controller = `file://${homeUser}/emudeck/launcher/themes/enabled/controllers/${folderName}.png`;
+        systems[
+          folderName
+        ].logo = `file://${homeUser}/emudeck/launcher/themes/enabled/logos/${folderName}.svg`;
+        // Crear entrada en gameList para la carpeta actual
+        gameList[folderName] = {};
 
-        const statGame = fs.statSync(gameFilePath);
+        // Recorrer archivos en la carpeta actual y verificar extensiones
+        const filesInFolder = fs.readdirSync(folderPath);
+        let i = 0;
+        filesInFolder.forEach((gameFile) => {
+          const gameFilePath = path.join(folderPath, gameFile);
+          const gameFileExt = `.${path
+            .extname(gameFile)
+            .toLowerCase()
+            .substring(1)}`;
 
-        if (
-          statGame.isFile() &&
-          allowedExtensions[0].includes(gameFileExt) &&
-          !gameFile.startsWith('.')
-        ) {
-          // Añadir entrada en gameList
-          const relativePath = path.relative(romsPath, folderPath);
+          const statGame = fs.statSync(gameFilePath);
 
-          gameList[folderName][i] = {
-            name: gameFile,
-            path: path.join(romsPath, relativePath, gameFile),
-          };
+          if (
+            statGame.isFile() &&
+            allowedExtensions[0].includes(gameFileExt) &&
+            !gameFile.startsWith('.')
+          ) {
+            // Añadir entrada en gameList
+            const relativePath = path.relative(romsPath, folderPath);
 
-          const romName = gameFile;
+            gameList[folderName][i] = {
+              name: gameFile,
+              path: path.join(romsPath, relativePath, gameFile),
+            };
 
-          let romNameTrimmed = romName
-            .replace(/\.nkit/g, '')
-            .replace(/!/g, '')
-            .replace(/Disc /g, '')
-            .replace(/Rev /g, '')
-            .replace(/\([^()]*\)/g, '')
-            .replace(/\[[A-z0-9!+]*\]/g, '')
-            .replace(/ - /g, '  ')
-            .replace(/ \./g, '.');
+            const romName = gameFile;
 
-          romNameTrimmed = romNameTrimmed.replace(/\..*/, '');
+            let romNameTrimmed = romName
+              .replace(/\.nkit/g, '')
+              .replace(/!/g, '')
+              .replace(/Disc /g, '')
+              .replace(/Rev /g, '')
+              .replace(/\([^()]*\)/g, '')
+              .replace(/\[[A-z0-9!+]*\]/g, '')
+              .replace(/ - /g, '  ')
+              .replace(/ \./g, '.');
 
-          // Put "The" at the beginning of the rom name
-          if (romNameTrimmed.includes(', The')) {
-            romNameTrimmed = romNameTrimmed.replace(/, The/, '');
-            romNameTrimmed = `The ${romNameTrimmed}`;
-          }
+            romNameTrimmed = romNameTrimmed.replace(/\..*/, '');
 
-          romNameTrimmed = romNameTrimmed.trimEnd();
-
-          const romNameForSearch = romNameTrimmed.replace('The ', '');
-
-          const platform = getLaunchboxAlias(folderName);
-          let databaseID;
-          let artbox;
-
-          // Cache
-          fs.mkdir(
-            `${homeUser}/emudeck/launcher/cache/${folderName}/`,
-            { recursive: true },
-            (err) => {
-              if (err) {
-                console.error('Error creating dir:', err);
-              }
-            },
-          );
-          const fileCachePath = `${homeUser}/emudeck/launcher/cache/${folderName}/${gameFile}`;
-
-          fs.access(fileCachePath, fs.constants.F_OK, (err) => {
-            if (err) {
-              const query =
-                'SELECT Games.DatabaseID as databaseid, Images.FileName as filename FROM Games JOIN Images ON Images.DatabaseID = Games.DatabaseID WHERE Type = "Screenshot - Gameplay" AND Name LIKE ? and Platform = ? LIMIT 1';
-
-              // Ejecutar la consulta
-              db.all(
-                query,
-                [`%${romNameForSearch}%`, platform],
-                (err, rows) => {
-                  const obj = rows[0];
-                  if (obj) {
-                    databaseID = obj.databaseid;
-                    artbox = obj.filename;
-                  }
-                  const insertQuery =
-                    'INSERT OR IGNORE INTO roms (file_name, name, system,platform, path, databaseID, artbox) VALUES (?, ?, ?, ?, ?, ?, ?)';
-                  db.run(
-                    insertQuery,
-                    [
-                      gameFile,
-                      romNameTrimmed,
-                      folderName,
-                      platform,
-                      gameFilePath,
-                      databaseID,
-                      artbox,
-                    ],
-                    function (err) {
-                      if (err) {
-                        return console.error(
-                          'Error al insertar datos:',
-                          err.message,
-                        );
-                      }
-                      // We cache the file
-                      fs.writeFile(fileCachePath, '', (err) => {
-                        if (err) {
-                          console.error('Error writing the file:', err);
-                        }
-                      });
-                    },
-                  );
-                },
-              );
+            // Put "The" at the beginning of the rom name
+            if (romNameTrimmed.includes(', The')) {
+              romNameTrimmed = romNameTrimmed.replace(/, The/, '');
+              romNameTrimmed = `The ${romNameTrimmed}`;
             }
-          });
 
-          // Incrementar contador de juegos
-          systems[folderName].games++;
-          i++;
+            romNameTrimmed = romNameTrimmed.trimEnd();
+
+            const romNameForSearch = romNameTrimmed.replace('The ', '');
+
+            const platform = getLaunchboxAlias(folderName);
+            let databaseID;
+            let artbox;
+
+            // Cache
+            fs.mkdir(
+              `${homeUser}/emudeck/launcher/cache/${folderName}/`,
+              { recursive: true },
+              (err) => {
+                if (err) {
+                  console.error('Error creating dir:', err);
+                }
+              },
+            );
+            const fileCachePath = `${homeUser}/emudeck/launcher/cache/${folderName}/${gameFile}`;
+
+            fs.access(fileCachePath, fs.constants.F_OK, (err) => {
+              if (err) {
+                const query =
+                  'SELECT Games.DatabaseID as databaseid, Images.FileName as filename FROM Games JOIN Images ON Images.DatabaseID = Games.DatabaseID WHERE Type = "Screenshot - Gameplay" AND Name LIKE ? and Platform = ? LIMIT 1';
+
+                // Ejecutar la consulta
+                db.all(
+                  query,
+                  [`%${romNameForSearch}%`, platform],
+                  (err, rows) => {
+                    const obj = rows[0];
+                    if (obj) {
+                      databaseID = obj.databaseid;
+                      artbox = obj.filename;
+                    }
+                    const insertQuery =
+                      'INSERT OR IGNORE INTO roms (file_name, name, system,platform, path, databaseID, artbox) VALUES (?, ?, ?, ?, ?, ?, ?)';
+                    db.run(
+                      insertQuery,
+                      [
+                        gameFile,
+                        romNameTrimmed,
+                        folderName,
+                        platform,
+                        gameFilePath,
+                        databaseID,
+                        artbox,
+                      ],
+                      function (err) {
+                        if (err) {
+                          return console.error(
+                            'Error al insertar datos:',
+                            err.message,
+                          );
+                        }
+                        // We cache the file
+                        fs.writeFile(fileCachePath, '', (err) => {
+                          if (err) {
+                            console.error('Error writing the file:', err);
+                          }
+                        });
+                      },
+                    );
+                  },
+                );
+              }
+            });
+
+            // Incrementar contador de juegos
+            systems[folderName].games++;
+            i++;
+          }
+        });
+
+        // Eliminar entrada en systems y gameList si no hay juegos
+        if (systems[folderName].games === 0) {
+          delete systems[folderName];
+          delete gameList[folderName];
         }
-      });
-
-      // Eliminar entrada en systems y gameList si no hay juegos
-      if (systems[folderName].games === 0) {
-        delete systems[folderName];
-        delete gameList[folderName];
       }
+    } catch (error) {
+      // Manejar la excepción cuando statSync() falla
+      console.error(`File error: ${filePath}: ${error.message}`);
     }
   });
 }
