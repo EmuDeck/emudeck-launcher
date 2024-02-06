@@ -144,6 +144,7 @@ function HomePage({ focusKey: focusKeyParam }) {
     if (themeCSS) {
       ipcChannel.sendMessage('get-systems');
       ipcChannel.once('get-systems', (systemsTemp) => {
+        console.log({ systemsTemp });
         const json = JSON.parse(systemsTemp);
         const systemsArray = Object.values(json);
         setStatePage({ ...statePage, systems: systemsArray });
@@ -202,6 +203,7 @@ function HomePage({ focusKey: focusKeyParam }) {
               hasFocusedChild ? 'systems-focused' : 'systems-unfocused'
             }`}
           >
+            {!systems && <h1>Loading Games</h1>}
             {themeCSS &&
               systems &&
               systems.map((item, i) => {

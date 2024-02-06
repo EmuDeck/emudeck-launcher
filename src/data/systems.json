@@ -192,7 +192,7 @@
     "excerpt": "1993  ·  32-bit Console",
     "description": "The 3DO Interactive Multiplayer (often called simply the 3DO), is a home video game console platform developed by The 3DO Company"
   },
-  "NintendoSwitch": {
+  "switch": {
     "name": "Nintendo Switch",
     "excerpt": "2017  ·  Handheld Console",
     "description": "The console itself is a tablet that can either be docked for use as a home console or used as a portable device, making it a hybrid console."
@@ -207,7 +207,7 @@
     "excerpt": "Video Games System",
     "description": "Video Games System"
   },
-  "Nintendo3DS": {
+  "n3ds": {
     "name": "Nintendo 3DS",
     "excerpt": "2010  ·  Handheld Console",
     "description": "The handheld's most prominent feature is its ability to display stereoscopic 3D effects without the use of 3D glasses or additional accessories, and offers new features such as the StreetPass and SpotPass tag modes, powered by Nintendo Network; augmented reality using its 3D cameras; and Virtual Console"
@@ -267,7 +267,7 @@
     "excerpt": "Coin Operated Cabinet",
     "description": "Coin-operated entertainment machines. The golden age is defined as a period between the late 1970s and ending in the mid-1980s"
   },
-  "NintendoGameCube": {
+  "gc": {
     "name": "Nintendo GameCube",
     "excerpt": "2001  ·  128-bit Console",
     "description": "The Nintendo GameCube is the successor to the Nintendo 64 and is the first Nintendo console to use optical discs as its primary storage medium"
@@ -277,7 +277,7 @@
     "excerpt": "Build Engine Games",
     "description": "Build Engine Games"
   },
-  "SegaGameGear": {
+  "gamegear": {
     "name": "Sega GameGear",
     "excerpt": "1990  ·  8-bit Handheld Console",
     "description": "The Game Gear shares much of its hardware with the Master System and is able to play its own titles as well as those of the Master System"
@@ -287,7 +287,7 @@
     "excerpt": "1998  ·  8-bit Handheld Console",
     "description": "The Game Boy Color features a color screen. It is slightly thicker and taller and features a slightly smaller screen than the Game Boy Pocket"
   },
-  "SegaMasterSystem": {
+  "mastersystem": {
     "name": "Sega Master System",
     "excerpt": "1985  ·  8-bit Console",
     "description": "Succeeding the SG-1000, the Master System was released as a direct competitor to the Nintendo Entertainment System (NES)"
@@ -317,12 +317,12 @@
     "excerpt": "1989  ·  8-bit Handheld Console",
     "description": "Nintendo's second handheld system following the Game & Watch series. It mainly competed with Game Gear and Lynx"
   },
-  "Commodore64": {
+  "c64": {
     "name": "Commodore 64",
     "excerpt": "1982  ·  8-bit Computer",
     "description": "The C64 is listed in the Guinness World Records as the highest-selling single computer model of all time."
   },
-  "3d0": {
+  "3do": {
     "name": "3DO",
     "excerpt": "1993  ·  32-bit Console",
     "description": "The 3DO Interactive Multiplayer (often called simply the 3DO), is a home video game console platform developed by The 3DO Company"
@@ -337,12 +337,12 @@
     "excerpt": "1989  ·  16-bit Console",
     "description": "Sega's third console and the successor to the Master System. Released in North America as the Genesis"
   },
-  "Commodore16": {
+  "c16": {
     "name": "COMMODORE 16",
     "excerpt": "1984  ·  16-bit Computer",
     "description": "Home computer made by Commodore International, intended to be an entry-level computer to replace the VIC-20"
   },
-  "SegaDreamcast": {
+  "dreamcast": {
     "name": "Sega Dreamcast",
     "excerpt": "1998  ·  128-bit Console",
     "description": "The Dreamcast was Sega's final home console, marking the end of the company's 18 years in the console market"
@@ -397,7 +397,7 @@
     "excerpt": "",
     "description": "Video Games System"
   },
-  "Microsoft Xbox": {
+  "xbox": {
     "name": "Microsoft Xbox",
     "excerpt": "2001",
     "description": "The Xbox is a home video game console and the first installment in the Xbox series of video game consoles manufactured by Microsoft. It was released as Microsoft's first foray into the gaming console market."
@@ -467,12 +467,12 @@
     "excerpt": "1993  ·  Arcade Board",
     "description": "Arcade board that Capcom first used for Super Street Fighter II. It was the successor to their previous CPS."
   },
-  "Nintendo VirtualBoy": {
+  "virtualBoy": {
     "name": "Nintendo VirtualBoy",
     "excerpt": "1995  ·  32-bit Table-top Console",
     "description": "It was marketed as the first console capable of displaying stereoscopic 3D graphics using a parallax effect to create the illusion of depth."
   },
-  "Nintendo Wii": {
+  "wii": {
     "name": "Nintendo Wii",
     "excerpt": "2006  ·  32-bit Console",
     "description": "The Wii introduced the Wii Remote controller, which can be used as a handheld pointing device and detects movement in three dimensions."
@@ -492,12 +492,12 @@
     "excerpt": "All Consoles / Handhelds",
     "description": "Access and quickly play games you have added to your custom collections."
   },
-  "Nintendo WiiU": {
+  "wiiU": {
     "name": "Nintendo WiiU",
     "excerpt": "2012  ·  Handheld Console",
     "description": "Successor to the Wii and the first eighth-gen video game console, as it competed with Microsoft's Xbox One and Sony's PS4."
   },
-  "Wonderswan": {
+  "wonderswan": {
     "name": "Wonderswan",
     "excerpt": "1999  ·  16-bit Handheld Console",
     "description": "Powered by a 16-bit central processing unit, it took advantage of a low price point and long battery life in comparison to its competition."
@@ -577,12 +577,12 @@
     "excerpt": "Video Games System",
     "description": "Video Games System."
   },
-  "Sega Genesis 32x": {
+  "sega32x": {
     "name": "Sega Genesis 32x",
     "excerpt": "1994  ·  32-bit Console",
     "description": "Designed to expand the power of the Genesis and serve as a transitional console into the 32-bit era until the release of the Sega Saturn."
   },
-  "Atari 2600": {
+  "atari2600": {
     "name": "Atari 2600",
     "excerpt": "1977  ·  8-bit Console",
     "description": "The Atari 2600 is credited with popularizing the use of microprocessor-based hardware and ROM cartridges containing game code."
@@ -657,7 +657,7 @@
     "excerpt": "Video Games System",
     "description": "Video Games System."
   },
-  "Atomiswave": {
+  "atomiswave": {
     "name": "Atomiswave",
     "excerpt": "2003  ·  32-bit Board",
     "description": "Custom arcade system board and cabinet from Sammy Corporation. It is based on Sega's Dreamcast system board."
@@ -682,11 +682,6 @@
     "excerpt": "All Consoles / Handhelds",
     "description": "Access and quickly play every single game across the entire library."
   },
-  "Valve Steam": {
-    "name": "Valve Steam",
-    "excerpt": "Digital Platform",
-    "description": "Developed by Valve Corporation, Steam offers digital rights management, multiplayer gaming, video streaming and social networking services."
-  },
   "sufami": {
     "name": "sufami",
     "excerpt": "Video Games System",
@@ -707,12 +702,6 @@
     "excerpt": "1994  ·  32-bit Console",
     "description": "The Sony PlayStation primarily competed with the Nintendo 64 and the Sega Saturn as part of the fifth generation of video game consoles."
   },
-  "Sega Genesis 32x": {
-    "name": "Sega Genesis 32x",
-    "manufacturer": "Sega Japan",
-    "excerpt": "1994  ·  32-bit Console.",
-    "description": "Designed to expand the power of the Genesis and serve as a transitional console into the 32-bit era until the release of the Sega Saturn."
-  },
   "samcoupe": {
     "name": "samcoupe",
     "excerpt": "Video Games System",
@@ -723,17 +712,12 @@
     "excerpt": "Video Games System",
     "description": "Video Games System."
   },
-  "Sega Saturn": {
+  "saturn": {
     "name": "Sega Saturn",
     "excerpt": "1994  ·  32-bit Console.",
     "description": " Fifth generation home video game console developed by Sega and successor to the successful Sega Genesis."
   },
-  "Sega Saturn (Sega Japan)": {
-    "name": "Sega Saturn",
-    "excerpt": "1994  ·  32-bit Console.",
-    "description": "Fifth generation home video game console developed by Sega and successor to the successful Sega Genesis."
-  },
-  "Microsoft Xbox 360": {
+  "xbox360": {
     "name": "Microsoft Xbox 360",
     "excerpt": "2005",
     "description": "The Xbox 360 is a home video game console developed by Microsoft. As the successor to the original Xbox, it is the second console in the Xbox series."
