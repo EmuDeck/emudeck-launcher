@@ -493,7 +493,6 @@ const insertROM = (
             : null;
           imageData.databaseID = result.DatabaseID;
         });
-        console.log({ results });
         console.log({ imageData });
         db.run(
           insertQuery,
@@ -695,40 +694,6 @@ ipcMain.on('get-games', async (event, system) => {
       }
 
       const resultsArray = rows.map((row) => ({ ...row }));
-
-      //       resultsArray.forEach((item, index) => {
-      //         const { name } = item;
-      //
-      //         // We retrieve the img ID
-      //         query = `SELECT DatabaseID FROM Games WHERE Platform = ? AND Name LIKE ? LIMIT 1`;
-      //         const likePattern = `%${name}%`;
-      //         db.all(query, [platform, likePattern], (err, rows) => {
-      //           if (err) {
-      //             return console.error('Error al realizar la consulta:', err.message);
-      //           }
-      //
-      //         });
-      //         //
-      //         //     const localImagePath = `${localImageDirectory}/imagen_${index + 1}.jpg`;
-      //         //
-      //         //     // Comprobar si la imagen existe localmente
-      //         //     if (imageExists(localImagePath)) {
-      //         //         console.log(`La imagen ${index + 1} ya existe localmente.`);
-      //         //     } else {
-      //         //         // Descargar la imagen si no existe
-      //         //         downloadImage(imageUrl, localImagePath);
-      //         //     }
-      //       });
-
-      //       db.all(query, [system], (err, rows) => {});
-      //
-      //       if (imageExists(localImagePath)) {
-      //         console.log('La imagen ya existe localmente.');
-      //       } else {
-      //         // Descargar la imagen si no existe
-      //         downloadImage(imageUrl, localImagePath);
-      //       }
-      // console.log(resultsArray);
       const resultsJSON = JSON.stringify(resultsArray, null, 2);
       event.reply('get-games', resultsJSON);
     });
