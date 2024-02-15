@@ -640,7 +640,15 @@ ipcMain.on('get-games', async (event, system) => {
   if (system !== undefined) {
     let resultsJSON;
     // const query = 'SELECT * FROM roms WHERE system = ?';
-    const query = `SELECT DISTINCT path, name, FileName as screenshot FROM roms JOIN Images ON Images.DatabaseID = roms.databaseID WHERE roms.system = ? AND Images.Type = "Screenshot - Gameplay" GROUP BY name`;
+    const query = `SELECT DISTINCT
+      path,
+      name,
+      (SELECT FileName FROM Images WHERE Images.DatabaseID = roms.databaseID AND Images.Type = "Screenshot - Gameplay" LIMIT 1) as screenshot,
+      (SELECT FileName FROM Images WHERE Images.DatabaseID = roms.databaseID AND Images.Type = "Clear Logo" LIMIT 1) as logo,
+      (SELECT FileName FROM Images WHERE Images.DatabaseID = roms.databaseID AND Images.Type = "Box - Front" LIMIT 1) as boxart
+    FROM roms
+    WHERE roms.system = ?
+    GROUP BY name`;
 
     // Ejecutar la consulta
     db.all(query, [system], (err, rows) => {
@@ -649,7 +657,7 @@ ipcMain.on('get-games', async (event, system) => {
       }
 
       const resultsArray = rows.map((row) => ({ ...row }));
-      const resultsJSON = JSON.stringify(resultsArray, null, 2);
+      resultsJSON = JSON.stringify(resultsArray, null, 2);
       event.reply('get-games', resultsJSON);
     });
   }
