@@ -422,105 +422,58 @@ const insertROM = (
   romNameForSearch,
   fileCachePath,
 ) => {
-  const query = `SELECT *
-  FROM (
+  const query = `
     SELECT *
     FROM Games
-    JOIN Images ON Images.DatabaseID = Games.DatabaseID
-    WHERE Type = "Screenshot - Gameplay" AND Name LIKE ? AND Platform = ?
+    WHERE Name LIKE ? AND Platform = ?
     ORDER BY Games.DatabaseID
     LIMIT 1
-  )
-  UNION
-  SELECT *
-  FROM (
-    SELECT *
-    FROM Games
-    JOIN Images ON Images.DatabaseID = Games.DatabaseID
-    WHERE Type = "Clear Logo" AND Name LIKE ? AND Platform = ?
-    ORDER BY Games.DatabaseID
-    LIMIT 1
-  )
-  UNION
-  SELECT *
-  FROM (
-    SELECT *
-    FROM Games
-    JOIN Images ON Images.DatabaseID = Games.DatabaseID
-    WHERE Type = "Box - Front" AND Name LIKE ? AND Platform = ?
-    ORDER BY Games.DatabaseID
-    LIMIT 1
-  )
-  LIMIT 3
-
 `;
 
   // Ejecutar la consulta
   // db.all(query, [`%${romNameForSearch}%`, platform], (err, rows) => {
-  db.all(
-    query,
-    [
-      `%${romNameForSearch}%`,
-      platform,
-      `%${romNameForSearch}%`,
-      platform,
-      `%${romNameForSearch}%`,
-      platform,
-    ],
-    (err, rows) => {
-      const results = rows;
-      if (results.length > 0) {
-        const insertQuery = `
-          INSERT OR REPLACE INTO roms (file_name, name, system, platform, path, databaseID, screenshot, logo, box)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+  db.all(query, [`%${romNameForSearch}%`, platform], (err, rows) => {
+    const results = rows;
+
+    if (results.length > 0) {
+      const insertQuery = `
+          INSERT OR REPLACE INTO roms (file_name, name, system, platform, path, databaseID)
+          VALUES (?, ?, ?, ?, ?, ?)
         `;
-        const imageData = {
-          gameFile,
-          romNameTrimmed,
-          folderName,
-          platform,
-          gameFilePath,
-        };
-        results.forEach((result) => {
-          result.Type === 'Screenshot - Gameplay'
-            ? (imageData.screenshot = result.FileName)
-            : null;
-          result.Type === 'Clear Logo'
-            ? (imageData.logo = result.FileName)
-            : null;
-          result.Type === 'Box - Front'
-            ? (imageData.box = result.FileName)
-            : null;
-          imageData.databaseID = result.DatabaseID;
-        });
-        console.log({ imageData });
-        db.run(
-          insertQuery,
-          [
-            imageData.gameFile,
-            imageData.romNameTrimmed,
-            imageData.folderName,
-            imageData.platform,
-            imageData.gameFilePath,
-            imageData.databaseID,
-            imageData.screenshot,
-            imageData.logo,
-            imageData.box,
-          ],
-          function (err) {
+      const imageData = {
+        gameFile,
+        romNameTrimmed,
+        folderName,
+        platform,
+        gameFilePath,
+      };
+      results.forEach((result) => {
+        imageData.databaseID = result.DatabaseID;
+      });
+      // console.log({ imageData });
+      db.run(
+        insertQuery,
+        [
+          imageData.gameFile,
+          imageData.romNameTrimmed,
+          imageData.folderName,
+          imageData.platform,
+          imageData.gameFilePath,
+          imageData.databaseID,
+        ],
+        function (err) {
+          if (err) {
+            return console.error('Error al insertar datos:', err.message);
+          }
+          fs.writeFile(fileCachePath, '', (err) => {
             if (err) {
-              return console.error('Error al insertar datos:', err.message);
+              console.error('Error writing the file:', err);
             }
-            fs.writeFile(fileCachePath, '', (err) => {
-              if (err) {
-                console.error('Error writing the file:', err);
-              }
-            });
-          },
-        );
-      }
-    },
-  );
+          });
+        },
+      );
+    }
+  });
 };
 
 function processFolder(folderPath, depth) {
@@ -685,8 +638,9 @@ ipcMain.on('load-game', async (event, game) => {
 
 ipcMain.on('get-games', async (event, system) => {
   if (system !== undefined) {
-    const query = 'SELECT * FROM roms WHERE system = ?';
-    const platform = getLaunchboxAlias(system);
+    // const query = 'SELECT * FROM roms WHERE system = ?';
+    const query = `SELECT * FROM (SELECT DISTINCT path, name, FileName as screenshot FROM roms JOIN Images ON Images.DatabaseID = roms.databaseID WHERE roms.system = ? AND Images.Type = "Screenshot - Gameplay" GROUP BY name)`;
+
     // Ejecutar la consulta
     db.all(query, [system], (err, rows) => {
       if (err) {
@@ -695,6 +649,7 @@ ipcMain.on('get-games', async (event, system) => {
 
       const resultsArray = rows.map((row) => ({ ...row }));
       const resultsJSON = JSON.stringify(resultsArray, null, 2);
+      console.log({ resultsJSON });
       event.reply('get-games', resultsJSON);
     });
   }
