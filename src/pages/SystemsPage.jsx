@@ -50,7 +50,7 @@ function System({ data, onEnterPress, onFocus }) {
   );
 }
 
-function HomePage({ focusKey: focusKeyParam }) {
+function SystemsPage({ focusKey: focusKeyParam }) {
   const ipcChannel = window.electron.ipcRenderer;
   const navigate = useNavigate();
   const [statePage, setStatePage] = useState({ systems: null });
@@ -141,23 +141,12 @@ function HomePage({ focusKey: focusKeyParam }) {
       handleGamepad();
     }
 
-    const cache = localStorage.getItem('systems');
-
-    if (cache) {
-      console.log('restore from cache');
-      const json = JSON.parse(cache);
+    ipcChannel.sendMessage('get-systems');
+    ipcChannel.once('get-systems', (systemsTemp) => {
+      const json = JSON.parse(systemsTemp);
       const systemsArray = Object.values(json);
       setStatePage({ ...statePage, systems: systemsArray });
-      console.log('Cache restored');
-    } else {
-      ipcChannel.sendMessage('get-systems');
-      ipcChannel.once('get-systems', (systemsTemp) => {
-        const json = JSON.parse(systemsTemp);
-        const systemsArray = Object.values(json);
-        localStorage.setItem('systems', systemsTemp);
-        setStatePage({ ...statePage, systems: systemsArray });
-      });
-    }
+    });
   }, []);
 
   const scrollingRef = useRef(null);
@@ -228,4 +217,4 @@ function HomePage({ focusKey: focusKeyParam }) {
   );
 }
 
-export default HomePage;
+export default SystemsPage;
