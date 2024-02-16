@@ -1,5 +1,12 @@
-import React, { useCallback, useEffect, useState, useRef } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+  useContext,
+} from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { GlobalContext } from 'context/globalContext';
 import { useFocusable, init, FocusContext } from '../spatial';
 
 init({
@@ -58,26 +65,33 @@ function Game({ data, onEnterPress, onFocus }) {
 
 function GamesPage({ focusKey: focusKeyParam }) {
   const ipcChannel = window.electron.ipcRenderer;
-  const [statePage, setStatePage] = useState({ games: null, themeCSS: null });
-  const { themeCSS, games } = statePage;
-
+  const [statePage, setStatePage] = useState({ games: null });
+  const { games } = statePage;
   const { system } = useParams();
 
   useEffect(() => {
-    ipcChannel.sendMessage('get-theme');
-    ipcChannel.once('get-theme', (themeCSS) => {
-      setStatePage({ ...statePage, themeCSS });
-    });
-  }, []);
-
-  useEffect(() => {
-    ipcChannel.sendMessage(`get-games`, system);
-    ipcChannel.once('get-games', (gamesTemp) => {
-      const json = JSON.parse(gamesTemp);
+    const cache = localStorage.getItem(system);
+    if (cache) {
+      console.log('restore from cache');
+      const json = JSON.parse(cache);
       const gamesArray = Object.values(json);
       setStatePage({ ...statePage, games: gamesArray });
-    });
-  }, [themeCSS]);
+      console.log('Cache restored');
+    } else {
+      console.log('ask for games');
+      ipcChannel.sendMessage(`get-games`, system);
+      ipcChannel.once('get-games', (gamesTemp) => {
+        console.log('games received');
+        const json = JSON.parse(gamesTemp);
+        const gamesArray = Object.values(json);
+
+        localStorage.setItem(system, gamesTemp);
+        console.log('games to state');
+        setStatePage({ ...statePage, games: gamesArray });
+        console.log('games loaded');
+      });
+    }
+  }, []);
 
   const scrollingRef = useRef(null);
 
@@ -121,7 +135,6 @@ function GamesPage({ focusKey: focusKeyParam }) {
 
   return (
     <>
-      <style>{themeCSS}</style>
       {/* <div>Games for {system}</div> */}
       <FocusContext.Provider value={focusKey}>
         <div ref={ref} className={system}>

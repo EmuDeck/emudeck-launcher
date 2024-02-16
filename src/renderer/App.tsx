@@ -15,13 +15,27 @@ export default function App() {
     gamepad: false,
   });
 
+  const [stateTheme, setStateTheme] = useState({
+    theme: null,
+  });
+  const { theme } = stateTheme;
+
+  const ipcChannel = window.electron.ipcRenderer;
+  ipcChannel.sendMessage('get-theme');
+  ipcChannel.once('get-theme', (theme) => {
+    setStateTheme({ ...stateTheme, theme });
+  });
+
   return (
     <GlobalContext.Provider
       value={{
         state,
         setState,
+        stateTheme,
+        setStateTheme,
       }}
     >
+      <style>{theme}</style>
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />

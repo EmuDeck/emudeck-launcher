@@ -53,16 +53,17 @@ function System({ data, onEnterPress, onFocus }) {
 function HomePage({ focusKey: focusKeyParam }) {
   const ipcChannel = window.electron.ipcRenderer;
   const navigate = useNavigate();
-  const [statePage, setStatePage] = useState({ systems: null, themeCSS: null });
-  const { systems, themeCSS } = statePage;
-  const { state, setState } = useContext(GlobalContext);
+  const [statePage, setStatePage] = useState({ systems: null });
+  const { systems } = statePage;
+  const { stateTheme, setStateTheme, state, setState } =
+    useContext(GlobalContext);
   const { gamepad } = state;
+  const { theme } = stateTheme;
   useEffect(() => {
-    console.log('pad?');
-    ipcChannel.sendMessage('get-theme');
-    ipcChannel.once('get-theme', (themeCSS) => {
-      setStatePage({ ...statePage, themeCSS });
-    });
+    // ipcChannel.sendMessage('get-theme');
+    // ipcChannel.once('get-theme', (theme) => {
+    //   setStateTheme({ ...stateTheme, theme });
+    // });
     if (!gamepad && 'getGamepads' in navigator) {
       console.log('pad detected');
       setState({ gamepad: true });
@@ -141,15 +142,13 @@ function HomePage({ focusKey: focusKeyParam }) {
     }
   }, []);
   useEffect(() => {
-    if (themeCSS) {
-      ipcChannel.sendMessage('get-systems');
-      ipcChannel.once('get-systems', (systemsTemp) => {
-        const json = JSON.parse(systemsTemp);
-        const systemsArray = Object.values(json);
-        setStatePage({ ...statePage, systems: systemsArray });
-      });
-    }
-  }, [themeCSS]);
+    ipcChannel.sendMessage('get-systems');
+    ipcChannel.once('get-systems', (systemsTemp) => {
+      const json = JSON.parse(systemsTemp);
+      const systemsArray = Object.values(json);
+      setStatePage({ ...statePage, systems: systemsArray });
+    });
+  }, []);
 
   const scrollingRef = useRef(null);
 
@@ -192,33 +191,30 @@ function HomePage({ focusKey: focusKeyParam }) {
   }, [systems]);
 
   return (
-    <>
-      <style>{themeCSS}</style>
-      <FocusContext.Provider value={focusKey}>
-        <div ref={ref}>
-          <div
-            ref={scrollingRef}
-            className={`systems ${
-              hasFocusedChild ? 'systems-focused' : 'systems-unfocused'
-            }`}
-          >
-            {!systems && <h1>Loading Games</h1>}
-            {themeCSS &&
-              systems &&
-              systems.map((item, i) => {
-                return (
-                  <System
-                    data={item}
-                    key={item.name}
-                    onFocus={onAssetFocus}
-                    onEnterPress={() => onAssetPress(item)}
-                  />
-                );
-              })}
-          </div>
+    <FocusContext.Provider value={focusKey}>
+      <div ref={ref}>
+        <div
+          ref={scrollingRef}
+          className={`systems ${
+            hasFocusedChild ? 'systems-focused' : 'systems-unfocused'
+          }`}
+        >
+          {!systems && <h1>Loading Games</h1>}
+          {theme &&
+            systems &&
+            systems.map((item, i) => {
+              return (
+                <System
+                  data={item}
+                  key={item.name}
+                  onFocus={onAssetFocus}
+                  onEnterPress={() => onAssetPress(item)}
+                />
+              );
+            })}
         </div>
-      </FocusContext.Provider>
-    </>
+      </div>
+    </FocusContext.Provider>
   );
 }
 
