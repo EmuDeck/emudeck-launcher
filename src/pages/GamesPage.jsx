@@ -40,6 +40,7 @@ function Game({ data, onEnterPress, onFocus }) {
       )}
       {item.box && (
         <img
+          loading="lazy"
           className="games__bg"
           src={`https://images.launchbox-app.com/${item.box}`}
           alt=""
@@ -47,6 +48,7 @@ function Game({ data, onEnterPress, onFocus }) {
       )}
       {item.screenshot && (
         <img
+          loading="lazy"
           className="games__bg games__screenshot"
           src={`https://images.launchbox-app.com/${item.screenshot}`}
           alt=""
@@ -54,6 +56,7 @@ function Game({ data, onEnterPress, onFocus }) {
       )}
       {item.logo && (
         <img
+          loading="lazy"
           className="games__bg games__logo"
           src={`https://images.launchbox-app.com/${item.logo}`}
           alt=""
