@@ -197,7 +197,14 @@ function HomePage({ focusKey: focusKeyParam }) {
   });
 
   useEffect(() => {
-    focusSelf();
+    if (systems) {
+      console.log('focus');
+
+      setTimeout(() => {
+        focusSelf();
+      }, '100');
+    }
+    setTimeout;
   }, [systems]);
 
   return (
