@@ -138,8 +138,19 @@ function GamesPage({ focusKey: focusKeyParam }) {
 
   return (
     <>
-      {/* <div>Games for {system}</div> */}
+      <div className="system-title">
+        <h1>Games for {system}</h1>
+      </div>
       <FocusContext.Provider value={focusKey}>
+        <ul className="controls">
+          <li>
+            <span>A</span> Play
+          </li>
+          <li>
+            <span>X</span> Refresh
+          </li>
+        </ul>
+
         <div ref={ref} className={system}>
           <div
             ref={scrollingRef}

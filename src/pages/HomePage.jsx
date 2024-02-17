@@ -14,13 +14,13 @@ init({
   visualDebug: false,
 });
 
-setKeyMap({
-  left: 37, // or 'ArrowLeft'
-  up: 38, // or 'ArrowUp'
-  right: 39, // or 'ArrowRight'
-  down: 40, // or 'ArrowDown'
-  enter: 13, // or 'Enter'
-});
+// setKeyMap({
+//   left: 37, // or 'ArrowLeft'
+//   up: 38, // or 'ArrowUp'
+//   right: 39, // or 'ArrowRight'
+//   down: 40, // or 'ArrowDown'
+//   enter: 13, // or 'Enter'
+// });
 
 function System({ data, onEnterPress, onFocus }) {
   const { ref, focused } = useFocusable({
@@ -60,15 +60,10 @@ function HomePage({ focusKey: focusKeyParam }) {
   const navigate = useNavigate();
   const [statePage, setStatePage] = useState({ systems: null });
   const { systems } = statePage;
-  const { stateTheme, setStateTheme, state, setState } =
-    useContext(GlobalContext);
+  const { stateTheme, state, setState } = useContext(GlobalContext);
   const { gamepad } = state;
   const { theme } = stateTheme;
   useEffect(() => {
-    // ipcChannel.sendMessage('get-theme');
-    // ipcChannel.once('get-theme', (theme) => {
-    //   setStateTheme({ ...stateTheme, theme });
-    // });
     if (!gamepad && 'getGamepads' in navigator) {
       console.log('pad detected');
       setState({ gamepad: true });
@@ -82,7 +77,8 @@ function HomePage({ focusKey: focusKeyParam }) {
         button14: 'ArrowLeft',
         button15: 'ArrowRight',
         button0: 'Enter',
-        button1: 'Esc',
+        button2: 'S',
+        button3: 'E',
       };
 
       // Mapeo de códigos de tecla para las teclas de flecha
@@ -93,6 +89,7 @@ function HomePage({ focusKey: focusKeyParam }) {
         ArrowRight: 39,
         Enter: 13,
         Esc: 27,
+        S: 83,
       };
 
       // Función para manejar la detección de botones
@@ -115,6 +112,13 @@ function HomePage({ focusKey: focusKeyParam }) {
                 if (buttonState[buttonIndex]) {
                   if (buttonIndex === 'button1') {
                     navigate(-1);
+                  }
+
+                  if (buttonIndex === 'button2') {
+                    localStorage.removeItem('systems');
+                    setTimeout(() => {
+                      window.location.reload();
+                    }, '500');
                   }
 
                   console.log(`Botón ${buttonIndex} presionado`);
@@ -214,6 +218,14 @@ function HomePage({ focusKey: focusKeyParam }) {
 
   return (
     <FocusContext.Provider value={focusKey}>
+      <ul className="controls">
+        <li>
+          <span>A</span> Enter
+        </li>
+        <li>
+          <span>X</span> Refresh
+        </li>
+      </ul>
       <div ref={ref}>
         <div
           ref={scrollingRef}
