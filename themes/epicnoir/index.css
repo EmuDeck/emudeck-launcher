@@ -290,5 +290,50 @@ img.games__bg:after {
   border-bottom: 1px solid #e4e4e4;
   max-width: 96%;
   margin: 0 auto;
-  margin-bottom: 16px;
+  padding: 12px 0;
+}
+.center {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(223, 32, 2, 0.6);
+  align-content: space-around;
+  justify-content: space-around;
+  align-items: center;
+}
+.center__group {
+  color: #fff;
+}
+
+.h3 {
+  margin-bottom: 8px;
+}
+
+.progress {
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.progress::-webkit-progress-bar {
+  background-color: #000;
+}
+
+.progress::-webkit-progress-value {
+  transition: width 1s;
+  background-color: #fff;
+}
+
+.progress::-moz-progress-bar {
+  background-color: #fff;
+}
+
+//legacy
+.progress {
+  background-color: #000;
+}
+
+.progress span {
+  background-color: #fff;
+  color: #fff;
 }

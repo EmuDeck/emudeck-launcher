@@ -177,7 +177,8 @@
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^4.15.1",
     "webpack-merge": "^5.9.0",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "getbasecore": "^2.0.22"
   },
   "build": {
     "productName": "EmuDeck Rom Launcher",
@@ -235,7 +236,8 @@
       "output": "release/build"
     },
     "extraResources": [
-      "./assets/**"
+      "./assets/**",
+      "./sqlite/database.db"
     ],
     "publish": {
       "provider": "github",

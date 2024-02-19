@@ -26,9 +26,88 @@ const systemsData = require('../data/systems.json');
 
 const homeUser = os.homedir();
 
+async function downloadDatabase(url, savePath) {
+  try {
+    const response = await axios({
+      url,
+      method: 'GET',
+      responseType: 'stream',
+    });
+
+    const writer = fs.createWriteStream(savePath);
+
+    response.data.pipe(writer);
+
+    return new Promise((resolve, reject) => {
+      writer.on('finish', resolve);
+      writer.on('error', reject);
+    });
+  } catch (error) {
+    console.error('Error al descargar la base de datos:', error.message);
+  }
+}
+
+// Library SQLITE
+const dbPathLibrary = `${homeUser}/emudeck/launcher/sqlite/library.db`;
+let dbLibrary;
+const dbDir = path.dirname(dbPathLibrary);
+if (!fs.existsSync(dbDir)) {
+  fs.mkdirSync(dbDir, { recursive: true }); // 'recursive: true' permite crear directorios anidados
+}
+
+if (!fs.existsSync(dbPathLibrary)) {
+  const db = new sqlite3.Database(dbPathLibrary, (err) => {
+    if (err) {
+      return console.error(err.message);
+    }
+    console.log('Conexión exitosa a la base de datos.');
+
+    // Define aquí tus comandos SQL para crear tablas
+    const createTableSql = `CREATE TABLE "roms" (
+      "id"	INTEGER,
+      "file_name"	TEXT,
+      "name"	TEXT,
+      "emulator"	TEXT,
+      "system"	TEXT,
+      "platform"	TEXT,
+      "played"	INTEGER DEFAULT 0,
+      "path"	TEXT,
+      "databaseID"	INTEGER,
+      "favourite"	INTEGER DEFAULT 0,
+      PRIMARY KEY("id" AUTOINCREMENT),
+      UNIQUE("file_name")
+    )`; // Asegúrate de reemplazar esto con tu SQL para crear tablas
+    db.run(createTableSql, (err) => {
+      if (err) {
+        console.error(err.message);
+      } else {
+        console.log('Tabla creada exitosamente o ya existía.');
+      }
+    });
+  });
+  dbLibrary = new sqlite3.Database(dbPathLibrary);
+} else {
+  dbLibrary = new sqlite3.Database(dbPathLibrary);
+}
+
+// Database SQLITE
 const dbPath = `${homeUser}/emudeck/launcher/sqlite/database.db`;
-// const dbPath = path.join(__dirname, 'sqlite', 'database.db');
-const db = new sqlite3.Database(dbPath);
+let db;
+if (!fs.existsSync(dbPath)) {
+  // Download it
+  const dbUrl = 'https://token.emudeck.com/database.db';
+
+  downloadDatabase(dbUrl, dbPath)
+    .then(() => {
+      console.log('Base de datos descargada y guardada con éxito.');
+      db = new sqlite3.Database(dbPath);
+    })
+    .catch((error) =>
+      console.error('Error al guardar la base de datos:', error),
+    );
+} else {
+  db = new sqlite3.Database(dbPath);
+}
 
 let shellType: string;
 if (os.platform().includes('win32')) {
@@ -46,6 +125,7 @@ if (os.platform().includes('win32')) {
 } else {
   settingsPath = `${homeUser}/emudeck/settings.sh`;
 }
+
 const settingsContent = fs.readFileSync(settingsPath, 'utf8');
 const themeCSSContent = fs.readFileSync(themeCSSPath, 'utf8');
 // Divide el contenido en líneas y filtra las líneas que no son comentarios
@@ -59,8 +139,9 @@ lines.forEach((line) => {
   const [key, value] = line.split('=');
   envVars[key.trim()] = value;
 });
-
-const { romsPath } = envVars;
+let { romsPath } = envVars;
+// $HOME FIX
+romsPath = romsPath.replace('"$HOME"', homeUser);
 
 const maxDepth = 2; // Puedes ajustar este valor según tu necesidad
 
@@ -451,7 +532,7 @@ const insertROM = (
         imageData.databaseID = result.DatabaseID;
       });
       // console.log({ imageData });
-      db.run(
+      dbLibrary.run(
         insertQuery,
         [
           imageData.gameFile,
@@ -472,6 +553,7 @@ const insertROM = (
           });
         },
       );
+      dbLibrary.close();
     }
   });
 };
@@ -619,6 +701,9 @@ ipcMain.on('get-systems', async (event) => {
 
 ipcMain.on('load-game', async (event, game) => {
   const { system, path } = game[0];
+
+  console.log({ game });
+
   const filePath = `${romsPath}/${system}/metadata.txt`;
   // We extract the launch parameter
   const systemInfoContent = fs.readFileSync(filePath, 'utf8');
@@ -628,6 +713,8 @@ ipcMain.on('load-game', async (event, game) => {
     .map((line) => line.trim().substring(8));
   launchParameter = launchParameter[0];
   launchParameter = launchParameter.replace('{file.path}', `"${path}"`);
+
+  console.log({ launchParameter });
 
   return exec(`${launchParameter}`, shellType, (error, stdout, stderr) => {
     event.reply('load-game', error, stdout, stderr);
@@ -639,27 +726,41 @@ ipcMain.on('load-game', async (event, game) => {
 ipcMain.on('get-games', async (event, system) => {
   if (system !== undefined) {
     let resultsJSON;
-    // const query = 'SELECT * FROM roms WHERE system = ?';
-    const query = `SELECT DISTINCT
-      path,
-      name,
-      (SELECT FileName FROM Images WHERE Images.DatabaseID = roms.databaseID AND Images.Type = "Screenshot - Gameplay" LIMIT 1) as screenshot,
-      (SELECT FileName FROM Images WHERE Images.DatabaseID = roms.databaseID AND Images.Type = "Clear Logo" LIMIT 1) as logo,
-      (SELECT FileName FROM Images WHERE Images.DatabaseID = roms.databaseID AND Images.Type = "Box - Front" LIMIT 1) as boxart
-    FROM roms
-    WHERE roms.system = ?
-    GROUP BY name`;
+    // const query =   'SELECT * FROM roms WHERE system = ?';
 
-    // Ejecutar la consulta
-    db.all(query, [system], (err, rows) => {
-      if (err) {
-        return console.error('Error al realizar la consulta:', err.message);
-      }
+    db.run(
+      `ATTACH DATABASE '${homeUser}/emudeck/launcher/sqlite/library.db' AS library`,
+      (err) => {
+        if (err) {
+          console.error('Error attaching database:', err);
+        } else {
+          const query = `SELECT DISTINCT
+            library.roms.path,
+            library.roms.name,
+            library.roms.system,
+            (SELECT FileName FROM Images WHERE Images.DatabaseID = library.roms.databaseID AND Images.Type = "Screenshot - Gameplay" LIMIT 1) as screenshot,
+            (SELECT FileName FROM Images WHERE Images.DatabaseID = library.roms.databaseID AND Images.Type = "Clear Logo" LIMIT 1) as logo,
+            (SELECT FileName FROM Images WHERE Images.DatabaseID = library.roms.databaseID AND Images.Type = "Box - Front" LIMIT 1) as boxart
+          FROM library.roms
+          WHERE library.roms.system = ?
+          GROUP BY library.roms.name`;
 
-      const resultsArray = rows.map((row) => ({ ...row }));
-      resultsJSON = JSON.stringify(resultsArray, null, 2);
-      event.reply('get-games', resultsJSON);
-    });
+          // Ejecutar la consulta
+          db.all(query, [system], (err, rows) => {
+            if (err) {
+              return console.error(
+                'Error al realizar la consulta:',
+                err.message,
+              );
+            }
+            db.run(`DETACH DATABASE library`);
+            const resultsArray = rows.map((row) => ({ ...row }));
+            resultsJSON = JSON.stringify(resultsArray, null, 2);
+            event.reply('get-games', resultsJSON);
+          });
+        }
+      },
+    );
   }
 });
 

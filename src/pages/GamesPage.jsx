@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { GlobalContext } from 'context/globalContext';
+import ProgressBar from 'components/atoms/ProgressBar/ProgressBar';
 import { useFocusable, init, FocusContext } from '../spatial';
 
 init({
@@ -138,39 +139,57 @@ function GamesPage({ focusKey: focusKeyParam }) {
 
   return (
     <>
-      <div className="system-title">
-        <h1>Games for {system}</h1>
-      </div>
-      <FocusContext.Provider value={focusKey}>
-        <ul className="controls">
-          <li>
-            <span>A</span> Play
-          </li>
-          <li>
-            <span>X</span> Refresh
-          </li>
-        </ul>
-
-        <div ref={ref} className={system}>
-          <div
-            ref={scrollingRef}
-            className={`games ${
-              hasFocusedChild ? 'games-focused' : 'games-unfocused'
-            }`}
-          >
-            {games &&
-              games.map((item, i) => {
-                return (
-                  <Game
-                    data={item}
-                    key={i}
-                    onFocus={onAssetFocus}
-                    onEnterPress={() => loadGame(item)}
-                  />
-                );
-              })}
+      {!games && (
+        <div className="center">
+          <div className="center__group">
+            <span className="h3">Creating database, please wait...</span>
+            <br />
+            <ProgressBar css="progress--success" infinite max="100" />
           </div>
         </div>
+      )}
+      {games && (
+        <div className="system-title">
+          <img
+            src={`file:///Users/rsedano/emudeck/launcher/themes/enabled/logos/${system}.svg`}
+            alt="alt"
+            width="200"
+          />
+        </div>
+      )}
+      <FocusContext.Provider value={focusKey}>
+        {games && (
+          <ul className="controls">
+            <li>
+              <span>A</span> Play
+            </li>
+            <li>
+              <span>X</span> Refresh
+            </li>
+          </ul>
+        )}
+        {games && (
+          <div ref={ref} className={system}>
+            <div
+              ref={scrollingRef}
+              className={`games ${
+                hasFocusedChild ? 'games-focused' : 'games-unfocused'
+              }`}
+            >
+              {games &&
+                games.map((item, i) => {
+                  return (
+                    <Game
+                      data={item}
+                      key={i}
+                      onFocus={onAssetFocus}
+                      onEnterPress={() => loadGame(item)}
+                    />
+                  );
+                })}
+            </div>
+          </div>
+        )}
       </FocusContext.Provider>
     </>
   );

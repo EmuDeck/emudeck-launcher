@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { GlobalContext } from 'context/globalContext';
+import ProgressBar from 'components/atoms/ProgressBar/ProgressBar';
 import { useFocusable, init, FocusContext, setKeyMap } from '../spatial';
 
 init({
@@ -213,7 +214,6 @@ function HomePage({ focusKey: focusKeyParam }) {
         focusSelf();
       }, '100');
     }
-    setTimeout;
   }, [systems]);
 
   return (
@@ -233,7 +233,10 @@ function HomePage({ focusKey: focusKeyParam }) {
             hasFocusedChild ? 'systems-focused' : 'systems-unfocused'
           }`}
         >
-          {!systems && <h1>Loading Games</h1>}
+          {!systems && (
+            <ProgressBar css="progress--success" infinite max="100" />
+          )}
+
           {theme &&
             systems &&
             systems.map((item, i) => {
