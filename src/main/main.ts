@@ -143,7 +143,7 @@ let { romsPath } = envVars;
 // $HOME FIX
 romsPath = romsPath.replace('"$HOME"', homeUser);
 
-const maxDepth = 2; // Puedes ajustar este valor según tu necesidad
+const maxDepth = 1; // Puedes ajustar este valor según tu necesidad
 
 const systems = {};
 const gameList = {};
@@ -487,8 +487,8 @@ function getLaunchboxAlias(system) {
       break;
     // Agrega más casos según sea necesario
     default:
-      console.log('unknown system, exiting.');
-      process.exit();
+      console.log(`unknown system, ignoring. ${system} `);
+      break;
   }
 
   return platform;
