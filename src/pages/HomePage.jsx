@@ -124,16 +124,19 @@ function HomePage({ focusKey: focusKeyParam }) {
 
                   console.log(`Botón ${buttonIndex} presionado`);
                   // Simula la pulsación de la tecla de flecha correspondiente
-                  const arrowKeyEvent = new KeyboardEvent('keydown', {
-                    key: dpadKeyMap[buttonIndex],
-                    code: dpadKeyMap[buttonIndex],
-                    keyCode: arrowKeyCodes[dpadKeyMap[buttonIndex]],
-                    which: arrowKeyCodes[dpadKeyMap[buttonIndex]],
-                    bubbles: true,
-                  });
+                  if (document.hasFocus()) {
+                    const arrowKeyEvent = new KeyboardEvent('keydown', {
+                      key: dpadKeyMap[buttonIndex],
+                      code: dpadKeyMap[buttonIndex],
+                      keyCode: arrowKeyCodes[dpadKeyMap[buttonIndex]],
+                      which: arrowKeyCodes[dpadKeyMap[buttonIndex]],
+                      bubbles: true,
+                    });
 
-                  // Despacha el evento de teclado simulado
-                  document.dispatchEvent(arrowKeyEvent);
+                    // Despacha el evento de teclado simulado
+
+                    document.dispatchEvent(arrowKeyEvent);
+                  }
                 }
               }
             }
