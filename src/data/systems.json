@@ -1,11 +1,11 @@
 {
-  "Wonderswan Color": {
+  "wonderswancolor": {
     "name": "Wonderswan Color",
     "excerpt": "1999  ·  16-bit Handheld Console",
     "description": "Powered by a 16-bit central processing unit, it took advantage of a low price point and long battery life in comparison to its competition"
   },
 
-  "Scumm VM": {
+  "scummvm": {
     "name": "Scumm VM",
     "excerpt": "Cross Platform Computer",
     "description": "Play the classic 'Point and Click' graphic adventure games from different platforms and systems like MS-DOS, C64, Apple II, or PC"
@@ -17,12 +17,12 @@
     "description": "Video Games System"
   },
 
-  "Sega Genesis CD": {
+  "segacd": {
     "name": "Sega Genesis CD",
     "excerpt": "1991  ·  16-bit Console",
     "description": "CD-ROM add-on to the Genesis, it launched many FMV games, including the infamous Night Trap, which led to the creation of the ESRB"
   },
-  "Sega Genesis 32x": {
+  "sega32x": {
     "name": "Sega Genesis 32x",
     "excerpt": "1994  ·  32-bit Console",
     "description": "Designed to expand the power of the Genesis and serve as a transitional console into the 32-bit era until the release of the Sega Saturn"
@@ -32,12 +32,12 @@
     "excerpt": "Video Games System",
     "description": "Video Games System"
   },
-  "NEC PC-88": {
+  "pc88": {
     "name": "NEC PC-88",
     "excerpt": "1982  ·  32-bit Computer",
     "description": "Lineup of Japanese 16-bit and 32-bit personal computers manufactured by NEC from 1982 to 2000"
   },
-  "Sega MegaCD": {
+  "megacd": {
     "name": "Sega MegaCD",
     "excerpt": "1991  ·  16-bit Console",
     "description": "CD-ROM add-on to the Megadrive, it launched many FMV games, including the infamous Night Trap, which led to the creation of the ESRB"
@@ -47,22 +47,22 @@
     "excerpt": "Video Games System",
     "description": "Video Games System"
   },
-  "Sega Megadrive": {
+  "megadrive": {
     "name": "Sega Megadrive",
     "excerpt": "1988  ·  16-bit Console",
     "description": "Sega's third console and the successor to the Master System. First released as the Mega Drive in Japan"
   },
-  "SuperGrafx": {
+  "supergrafx": {
     "name": "SuperGrafx",
     "excerpt": "1989  ·  16-bit Console",
     "description": "The SuperGrafx is an upgraded version of the PC Engine. Only six retail games were produced which took advantage of the improved hardware"
   },
-  "PC-Engine CD": {
+  "pcenginecd": {
     "name": "PC-Engine CD",
     "excerpt": "1988  ·  16-bit Console",
     "description": "Add-on attachment for the PC Engine. The add-on allows core versions of the console to play PC Engine games in CD-ROM format"
   },
-  "Sega Naomi": {
+  "naomi": {
     "name": "Sega Naomi",
     "excerpt": "1998  ·  Arcade Board",
     "description": "A development of the Dreamcast home game console, the NAOMI and Dreamcast share the same hardware components."
@@ -82,7 +82,7 @@
     "excerpt": "Video Games System",
     "description": "Video Games System"
   },
-  "Sony Playstation 2": {
+  "ps2": {
     "name": "Sony Playstation 2",
     "excerpt": "2000  ·  128-bit Console",
     "description": "The PlayStation 2 is the best-selling video game console of all time, selling over 155 million units."
@@ -92,82 +92,62 @@
     "excerpt": "Video Games System",
     "description": "Video Games System"
   },
-  "PC-Engine": {
+  "pcengine": {
     "name": "PC-Engine",
     "excerpt": "1987  ·  16-bit Console",
     "description": "Originally intended to compete with the NES, it ended up competing with the Sega Genesis, and later on the Super Nintendo"
   },
-  "PC-Engine CD": {
+  "pcenginecd": {
     "name": "PC-Engine CD",
     "excerpt": "1988  ·  16-bit Console",
     "description": "Add-on attachment for the PC Engine. The add-on allows core versions of the console to play PC Engine games in CD-ROM format"
   },
-  "NEC PC-98": {
+  "pc98": {
     "name": "NEC PC-98",
     "excerpt": "1982  ·  32-bit Computer",
     "description": "Lineup of Japanese 16-bit and 32-bit personal computers manufactured by NEC from 1982 to 2000"
   },
-  "Neo Geo CD": {
+  "neogeocd": {
     "name": "Neo Geo CD",
     "excerpt": "1990  ·  24-bit Console",
     "description": "Originally launched as the MVS coin-operated arcade machine. It was ranked 19th out of 25 best video game consoles of all time"
   },
-  "Sony Playstation 3": {
+  "ps3": {
     "name": "Sony Playstation 3",
     "excerpt": "2006",
     "description": "The PlayStation 3 (PS3) is a home video game console developed by Sony Computer Entertainment. The successor to the PlayStation 2, it is part of the PlayStation brand of consoles."
   },
-  "MSX": {
+  "msx": {
     "name": "MSX",
     "excerpt": "1983  ·  8-bit Computer",
     "description": "MSX is a standardized home computer architecture, conceived as an attempt to create unified standards among various hardware makers"
   },
-  "MSX 2": {
+  "msx2": {
     "name": "MSX 2",
     "excerpt": "1984  ·  16-bit Computer",
     "description": "MSX2 is a standardized home computer architecture, conceived as an attempt to create unified standards among various hardware makers"
   },
-  "MSX 2": {
-    "name": "MSX 2",
-    "excerpt": "1984  ·  16-bit Computer",
-    "description": "MSX2 is a standardized home computer architecture, conceived as an attempt to create unified standards among various hardware makers"
-  },
-  "Nintendo 64": {
+  "n64": {
     "name": "Nintendo 64",
     "excerpt": "1996  ·  64-bit Console",
     "description": "The N64 was the last major home console to use the cartridge as its primary storage format until Nintendo's seventh console, the Nintendo Switch"
   },
-  "Neo Geo Pocket Color": {
+  "ngpc": {
     "name": "Neo Geo Pocket Color",
     "excerpt": "1999  ·  16-bit Handheld Console",
     "description": "The Neo Geo Pocket Color is the successor to SNK's monochrome Neo Geo Pocket, with the Color being fully backward compatible"
-  },
-  "msx1": {
-    "name": "msx1",
-    "excerpt": "Video Games System",
-    "description": "Video Games System"
   },
   "odyssey2": {
     "name": "odyssey2",
     "excerpt": "Video Games System",
     "description": "Video Games System"
   },
-  "Neo Geo CD": {
-    "name": "Neo Geo CD",
-    "excerpt": "1990  ·  24-bit Console",
-    "description": "Originally launched as the MVS coin-operated arcade machine. It was ranked 19th out of 25 best video game consoles of all time"
-  },
-  "Sega Mega 32x": {
-    "name": "Sega Mega 32x",
-    "excerpt": "1994  ·  32-bit Console",
-    "description": "Designed to expand the power of the Megadrive and serve as a transitional console into the 32-bit era until the release of the Sega Saturn"
-  },
   "bbcmicro": {
     "name": "bbcmicro",
     "excerpt": "Video Games System",
     "description": "Video Games System"
   },
-  "Pico 8": {
+  "pico8": {
     "name": "Pico 8",
     "excerpt": "2015  ·  Game Engine",
     "description": "PICO-8 is a virtual machine and game engine created by Lexaloffle Games."
@@ -187,7 +167,7 @@
     "excerpt": "Video Games System",
     "description": "Video Games System"
   },
-  "3DO": {
+  "3do": {
     "name": "3DO",
     "excerpt": "1993  ·  32-bit Console",
     "description": "The 3DO Interactive Multiplayer (often called simply the 3DO), is a home video game console platform developed by The 3DO Company"
@@ -197,7 +177,7 @@
     "excerpt": "2017  ·  Handheld Console",
     "description": "The console itself is a tablet that can either be docked for use as a home console or used as a portable device, making it a hybrid console."
   },
-  "FinalBurnNeo": {
+  "fbn": {
     "name": "Final Burn Neo",
     "excerpt": "Coin Operated Cabinet",
     "description": "Coin-operated entertainment machines. The golden age is defined as a period between the late 1970s and ending in the mid-1980s"
@@ -207,12 +187,7 @@
     "excerpt": "Video Games System",
     "description": "Video Games System"
   },
-  "n3ds": {
-    "name": "Nintendo 3DS",
-    "excerpt": "2010  ·  Handheld Console",
-    "description": "The handheld's most prominent feature is its ability to display stereoscopic 3D effects without the use of 3D glasses or additional accessories, and offers new features such as the StreetPass and SpotPass tag modes, powered by Nintendo Network; augmented reality using its 3D cameras; and Virtual Console"
-  },
-  "SinclairZXSpectrum": {
+  "zxspectrum": {
     "name": "Sinclair ZX Spectrum",
     "excerpt": "1982  ·  8-bit Computer",
     "description": "The Spectrum was among the first mainstream-audience home computers in the UK, similar in significance to the Commodore 64 in the USA"
@@ -222,47 +197,32 @@
     "excerpt": "Video Games System",
     "description": "Video Games System"
   },
-  "FamicomDiskSystem": {
+  "famicom": {
     "name": "Famicom Disk System",
     "excerpt": "1986  ·  8-bit Console",
     "description": "The Family Computer is a peripheral for Nintendo's Family Computer home video game console, released only in Japan"
   },
-  "MAME": {
+  "arcade": {
     "name": "M.A.M.E.",
     "excerpt": "Coin Operated Cabinet",
     "description": "Coin-operated entertainment machines. The golden age is defined as a period between the late 1970s and ending in the mid-1980s"
-  },
-  "mame-mame4all": {
-    "name": "mame-mame4all",
-    "excerpt": "Video Games System",
-    "description": "Video Games System"
   },
   "tanodragon": {
     "name": "tanodragon",
     "excerpt": "Video Games System",
     "description": "Video Games System"
   },
-  "LightgunGenre": {
-    "name": "Lightgun Genre",
-    "excerpt": "Game Genre",
-    "description": "Light gun shooter, is a shooter video game genre in which the primary design element is aiming and shooting with a gun-shaped controller"
-  },
   "macintosh": {
     "name": "macintosh",
     "excerpt": "Video Games System",
     "description": "Video Games System"
-  },
-  "FightingGenre": {
-    "name": "Fighting Genre",
-    "excerpt": "Game Genre",
-    "description": "In a fighting game, the player engages in close combat with an AI or player-controlled opponent"
   },
   "gba": {
     "name": "GameBoy Advance",
     "excerpt": "2001  ·  32-bit Handheld Console",
     "description": "Successor to the Game Boy Color. Market competitors at the time were the Neo Geo Pocket Color, Wonder Swan, GP32 and the N-Gage"
   },
-  "FinalBurnAlpha": {
+  "fba": {
     "name": "Final Burn Alpha",
     "excerpt": "Coin Operated Cabinet",
     "description": "Coin-operated entertainment machines. The golden age is defined as a period between the late 1970s and ending in the mid-1980s"
@@ -271,11 +231,6 @@
     "name": "Nintendo GameCube",
     "excerpt": "2001  ·  128-bit Console",
     "description": "The Nintendo GameCube is the successor to the Nintendo 64 and is the first Nintendo console to use optical discs as its primary storage medium"
-  },
-  "BuildEngine": {
-    "name": "Build Engine",
-    "excerpt": "Build Engine Games",
-    "description": "Build Engine Games"
   },
   "gamegear": {
     "name": "Sega GameGear",
@@ -297,17 +252,13 @@
     "excerpt": "Video Games System",
     "description": "Video Games System"
   },
-  "FinalBurnNeo": {
-    "name": "Final Burn Neo",
-    "excerpt": "Coin Operated Cabinet",
-    "description": "Coin-operated entertainment machines. The golden age is defined as a period between the late 1970s and ending in the mid-1980s"
-  },
-  "GameAndWatch": {
+
+  "gameandwatch": {
     "name": "Game & Watch",
     "excerpt": "Handheld Electronic Games",
     "description": "Line of handheld electronic games produced by Nintendo from 1980 to 1991. Created by game designer Gunpei Yokoi"
   },
-  "Intellivision": {
+  "intellivision": {
     "name": "Intellivision",
     "excerpt": "1980  ·  8-bit Console",
     "description": "The Intellivision is a home video game console released by Mattel Electronics, and was in direct competition with the Atari 2600"
@@ -321,11 +272,6 @@
     "name": "Commodore 64",
     "excerpt": "1982  ·  8-bit Computer",
     "description": "The C64 is listed in the Guinness World Records as the highest-selling single computer model of all time."
-  },
-  "3do": {
-    "name": "3DO",
-    "excerpt": "1993  ·  32-bit Console",
-    "description": "The 3DO Interactive Multiplayer (often called simply the 3DO), is a home video game console platform developed by The 3DO Company"
   },
   "snes": {
     "name": "Super Nintendo",
@@ -347,7 +293,7 @@
     "excerpt": "1998  ·  128-bit Console",
     "description": "The Dreamcast was Sega's final home console, marking the end of the company's 18 years in the console market"
   },
-  "TurboGrafxCD": {
+  "tg-cd": {
     "name": "TurboGrafx CD",
     "excerpt": "1990  ·  16-bit Console",
     "description": "Add-on attachment for the TurboGrafx-16. The add-on allows core versions of the console to play TurboGrafx-16 games in CD-ROM format"
@@ -356,11 +302,6 @@
     "name": "cavestory",
     "excerpt": "Video Games System",
     "description": "Video Games System"
-  },
-  "TurboGrafx16": {
-    "name": "TurboGrafx-16",
-    "excerpt": "1987  ·  16-bit Console",
-    "description": "Originally intended to compete with the NES, it ended up competing with the Sega Genesis, and later on the Super Nintendo"
   },
   "cdimono1": {
     "name": "cdimono1",
@@ -402,32 +343,22 @@
     "excerpt": "2001",
     "description": "The Xbox is a home video game console and the first installment in the Xbox series of video game consoles manufactured by Microsoft. It was released as Microsoft's first foray into the gaming console market."
   },
-  "Tools": {
-    "name": "Tools",
-    "excerpt": "",
-    "description": "Tools and scripts"
-  },
   "coleco": {
     "name": "coleco",
     "excerpt": "",
     "description": "Video Games System"
   },
-  "COCO TRS-80": {
+  "trs-80": {
     "name": "COCO TRS-80",
     "excerpt": "1977",
     "description": "Sold by Tandy through their RadioShack stores. It is one of the earliest mass-produced home computers."
   },
-  "Coleco Vision": {
+  "colecovision": {
     "name": "Coleco Vision",
     "excerpt": "1982",
     "description": "The ColecoVision offered a closer experience to more powerful arcade game systems compared to competitors such as the Atari 2600."
   },
-  "trs-80": {
-    "name": "trs-80",
-    "excerpt": "",
-    "description": "Video Games System"
-  },
-  "Vectrex": {
+  "vectrex": {
     "name": "Vectrex",
     "excerpt": "1982",
     "description": "Vector display based home video game console that was developed by Western Technologies Smith Engineering."
@@ -437,17 +368,12 @@
     "excerpt": "",
     "description": "Video Games System"
   },
-  "CAPCOM SYSTEM I": {
+  "cps": {
     "name": "CAPCOM SYSTEM I",
     "excerpt": "1988",
     "description": "The CPS is an arcade system board developed by Capcom that ran game software stored on removable ROM cartridges."
   },
-  "cps": {
-    "name": "cps",
-    "excerpt": "",
-    "description": "Video Games System"
-  },
-  "COMMODORE VIC-20": {
+  "vic20": {
     "name": "COMMODORE VIC-20",
     "excerpt": "1980",
     "description": "The VIC-20 was the first computer of any description to sell one million units."
@@ -462,12 +388,12 @@
     "excerpt": "",
     "description": "Video Games System"
   },
-  "CAPCOM SYSTEM II": {
+  "cps2": {
     "name": "CAPCOM SYSTEM II",
     "excerpt": "1993  ·  Arcade Board",
     "description": "Arcade board that Capcom first used for Super Street Fighter II. It was the successor to their previous CPS."
   },
-  "virtualBoy": {
+  "virtualboy": {
     "name": "Nintendo VirtualBoy",
     "excerpt": "1995  ·  32-bit Table-top Console",
     "description": "It was marketed as the first console capable of displaying stereoscopic 3D graphics using a parallax effect to create the illusion of depth."
@@ -477,22 +403,17 @@
     "excerpt": "2006  ·  32-bit Console",
     "description": "The Wii introduced the Wii Remote controller, which can be used as a handheld pointing device and detects movement in three dimensions."
   },
-  "CAPCOM SYSTEM III": {
+  "cps3I": {
     "name": "CAPCOM SYSTEM III",
     "excerpt": "1996  ·  Arcade Board",
     "description": "The last proprietary system board Capcom would produce before moving on to the Dreamcast-based Naomi platform."
   },
-  "Daphne": {
+  "daphne": {
     "name": "Daphne",
     "excerpt": "Laserdisc Console",
     "description": "Converged device and home video game console capable of playing Laserdiscs, Compact Discs, console games, and LD-G karaoke discs."
   },
-  "Custom Collection": {
-    "name": "Custom Collection",
-    "excerpt": "All Consoles / Handhelds",
-    "description": "Access and quickly play games you have added to your custom collections."
-  },
-  "wiiU": {
+  "wiiu": {
     "name": "Nintendo WiiU",
     "excerpt": "2012  ·  Handheld Console",
     "description": "Successor to the Wii and the first eighth-gen video game console, as it competed with Microsoft's Xbox One and Sony's PS4."
@@ -502,17 +423,12 @@
     "excerpt": "1999  ·  16-bit Handheld Console",
     "description": "Powered by a 16-bit central processing unit, it took advantage of a low price point and long battery life in comparison to its competition."
   },
-  "Shoot 'em Up Genre": {
-    "name": "Shoot 'em Up Genre",
-    "excerpt": "Game Genre",
-    "description": "In a shoot 'em up, the player shoots large numbers of enemies while dodging obstacles, often in a spacecraft or aircraft."
-  },
-  "X68000": {
+  "x68000": {
     "name": "X68000",
     "excerpt": "1987  ·  24-bit Computer",
     "description": "The X68000 is a home computer, sold only in Japan. In terms of hardware, the X68K was very similar to arcade machines of the time."
   },
-  "Atari 7800": {
+  "atari7800": {
     "name": "Atari 7800",
     "excerpt": "1986  ·  8-bit Console",
     "description": "Almost fully backward-compatible with the Atari 2600, the 7800 was the first console to have backward compatibility without the use of additional modules."
@@ -562,12 +478,12 @@
     "excerpt": "1981  ·  Desktop Computers",
     "description": "MS-DOS is an operating system for x86-based personal computers mostly developed by Microsoft."
   },
-  "Atari 5200": {
+  "atari5200": {
     "name": "Atari 5200",
     "excerpt": "1982  ·  8-bit Console",
     "description": "Home video game console that was introduced as a higher-end complementary console for the popular Atari 2600."
   },
-  "Apple ][": {
+  "apple2": {
     "name": "Apple ][",
     "excerpt": "1977  ·  8-bit Computer",
     "description": "One of the first highly successful mass-produced microcomputer products, designed primarily by Steve Wozniak."
@@ -587,25 +503,15 @@
     "excerpt": "1977  ·  8-bit Console",
     "description": "The Atari 2600 is credited with popularizing the use of microprocessor-based hardware and ROM cartridges containing game code."
   },
-  "Sega SG-1000": {
+  "sg-1000": {
     "name": "Sega SG-1000",
     "excerpt": "1983  ·  8-bit Console",
     "description": "Sega's first entry into the home video game hardware business provided the basis for the more successful Master System."
   },
-  "Atari 800": {
+  "atari800": {
     "name": "Atari 800",
     "excerpt": "1979  ·  8-bit Computer",
     "description": "The Atari 8-bit family is a series of 8-bit home computers. All of the machines in the family are technically similar and differ primarily in packaging."
-  },
-  "snesna": {
-    "name": "snesna",
-    "excerpt": "Video Games System",
-    "description": "Video Games System."
-  },
-  "Adventure Genre": {
-    "name": "Adventure Genre",
-    "excerpt": "Game Genre",
-    "description": "In an adventure game the player follows an interactive story, driven by exploration and puzzle-solving."
   },
   "ps4": {
     "name": "ps4",
@@ -622,27 +528,22 @@
     "excerpt": "2011  ·  Handheld Console",
     "description": "The Vita's design was intended to meld the experience of big-budget, dedicated video game platforms with the then up-and-coming trend of mobile gaming."
   },
-  "Action Genre": {
-    "name": "Action Genre",
-    "excerpt": "Game Genre",
-    "description": "An action game emphasizes physical challenges, including hand–eye coordination and reaction-time."
-  },
-  "Atari Jaguar CD": {
+  "atarijaguarcd": {
     "name": "Atari Jaguar CD",
     "excerpt": "1993  ·  64-bit Console",
     "description": "Sixth and last programmable console to be developed under the Atari brand, Atari marketed the Jaguar as being the first 64-bit video game console."
   },
-  "Atari Jaguar": {
+  "atarijaguar": {
     "name": "Atari Jaguar",
     "excerpt": "1993  ·  64-bit Console",
     "description": "Sixth and last programmable console to be developed under the Atari brand, Atari marketed the Jaguar as being the first 64-bit video game console."
   },
-  "Atari ST": {
+  "atarist": {
     "name": "Atari ST",
     "excerpt": "1985  ·  16-bit Computer.",
     "description": "The Atari ST is a line of home computers from Atari Corporation and the successor to the Atari 8-bit family."
   },
-  "Atari Lynx": {
+  "atarilynx": {
     "name": "Atari Lynx",
     "excerpt": "1989  ·  16-bit Handheld Console",
     "description": "The Lynx was the world's first handheld electronic game with a color LCD and was also notable for its advanced graphics and ambidextrous layout."
@@ -662,11 +563,6 @@
     "excerpt": "2003  ·  32-bit Board",
     "description": "Custom arcade system board and cabinet from Sammy Corporation. It is based on Sega's Dreamcast system board."
   },
-  "Sports Genre": {
-    "name": "Sports Genre",
-    "excerpt": "Game Genre",
-    "description": "Most sports have been recreated with a game, including team sports, track and field, extreme sports and combat sports."
-  },
   "doom": {
     "name": "doom",
     "excerpt": "Video Games System",
@@ -676,11 +572,6 @@
     "name": "spectravideo",
     "excerpt": "Video Games System",
     "description": "Video Games System."
-  },
-  "All Games": {
-    "name": "All Games",
-    "excerpt": "All Consoles / Handhelds",
-    "description": "Access and quickly play every single game across the entire library."
   },
   "sufami": {
     "name": "sufami",
