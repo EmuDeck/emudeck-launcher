@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Bebas';
-  src: url('./fonts/BebasNeue.otf');
+  src: url('file:///home/deck/emudeck/launcher/themes/enabled/fonts/BebasNeue.otf');
 }
 
 body {
