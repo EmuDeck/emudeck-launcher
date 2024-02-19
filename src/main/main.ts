@@ -716,9 +716,13 @@ ipcMain.on('load-game', async (event, game) => {
 
   console.log({ launchParameter });
 
-  return exec(`${launchParameter}`, shellType, (error, stdout, stderr) => {
-    event.reply('load-game', error, stdout, stderr);
-  });
+  return exec(
+    `konsole -e ${launchParameter}`,
+    shellType,
+    (error, stdout, stderr) => {
+      event.reply('load-game', error, stdout, stderr);
+    },
+  );
 
   // event.reply('get-systems', JSON.stringify(Object.values(systems), null, 2));
 });
