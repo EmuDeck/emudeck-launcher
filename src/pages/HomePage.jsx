@@ -39,7 +39,7 @@ function System({ data, onEnterPress, onFocus }) {
           focused ? 'systems__system--focused' : ''
         }`}
       >
-        <img loading="lazy" className="systems__bg" src={item.poster} alt="" />
+        <img className="systems__bg" src={item.poster} alt="" />
         <div className="systems__excerpt">{item.excerpt}</div>
         <div className="systems__name">{item.name}</div>
         <div className="systems__count">Games: {item.games}</div>

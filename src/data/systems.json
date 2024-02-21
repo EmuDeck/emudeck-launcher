@@ -107,6 +107,11 @@
     "excerpt": "1982  ·  32-bit Computer",
     "description": "Lineup of Japanese 16-bit and 32-bit personal computers manufactured by NEC from 1982 to 2000"
   },
+  "neogeo": {
+    "name": "Neo Geo",
+    "excerpt": "1990  ·  24-bit Console",
+    "description": "Originally launched as the MVS coin-operated arcade machine. It was ranked 19th out of 25 best video game consoles of all time"
+  },
   "neogeocd": {
     "name": "Neo Geo CD",
     "excerpt": "1990  ·  24-bit Console",
@@ -132,6 +137,16 @@
     "excerpt": "1996  ·  64-bit Console",
     "description": "The N64 was the last major home console to use the cartridge as its primary storage format until Nintendo's seventh console, the Nintendo Switch"
   },
+  "n64dd": {
+    "name": "Nintendo 64 DD",
+    "excerpt": "1996  ·  64-bit Console",
+    "description": "The N64 was the last major home console to use the cartridge as its primary storage format until Nintendo's seventh console, the Nintendo Switch"
+  },
+  "ngp": {
+    "name": "Neo Geo Pocket",
+    "excerpt": "1998  ·  16-bit Handheld Console",
+    "description": "The Neo Geo Pocket (NGP) is a monochrome handheld game console released by SNK. It was the company's first handheld system and is part of the Neo Geo family. "
+  },
   "ngpc": {
     "name": "Neo Geo Pocket Color",
     "excerpt": "1999  ·  16-bit Handheld Console",
@@ -156,6 +171,11 @@
     "name": "Nintendo 3DS",
     "excerpt": "2010  ·  Handheld Console",
     "description": "The handheld's most prominent feature is its ability to display stereoscopic 3D effects without the use of 3D glasses or additional accessories."
+  },
+  "nds": {
+    "name": "Nintendo DS",
+    "excerpt": "2010  ·  Handheld Console",
+    "description": "The Nintendo DS[a] is a foldable handheld game console produced by Nintendo, released globally across 2004 and 2005. The DS, an initialism for \"Developers' System\" or \"Dual Screen\""
   },
   "segacd": {
     "name": "Sega SegaCD",
@@ -278,8 +298,18 @@
     "excerpt": "1990  ·  16-bit Console",
     "description": "Nintendo's second home console introduced advanced graphics and sound capabilities compared with other systems at the time"
   },
+  "sneshd": {
+    "name": "Super Nintendo WideScreen",
+    "excerpt": "1990  ·  16-bit Console",
+    "description": "Nintendo's second home console introduced advanced graphics and sound capabilities compared with other systems at the time"
+  },
   "genesis": {
     "name": "Sega Genesis",
+    "excerpt": "1989  ·  16-bit Console",
+    "description": "Sega's third console and the successor to the Master System. Released in North America as the Genesis"
+  },
+  "genesiswide": {
+    "name": "Sega Genesis Widescreen",
     "excerpt": "1989  ·  16-bit Console",
     "description": "Sega's third console and the successor to the Master System. Released in North America as the Genesis"
   },
@@ -287,6 +317,11 @@
     "name": "COMMODORE 16",
     "excerpt": "1984  ·  16-bit Computer",
     "description": "Home computer made by Commodore International, intended to be an entry-level computer to replace the VIC-20"
+  },
+  "primehacks": {
+    "name": "PrimeHack",
+    "excerpt": "2001  ·  128-bit Console",
+    "description": "PrimeHack is a modified version of Dolphin-Emu solely for playing Metroid Prime Trilogy for Wii with keyboard and mouse on a PC."
   },
   "dreamcast": {
     "name": "Sega Dreamcast",
@@ -612,5 +647,10 @@
     "name": "Microsoft Xbox 360",
     "excerpt": "2005",
     "description": "The Xbox 360 is a home video game console developed by Microsoft. As the successor to the original Xbox, it is the second console in the Xbox series."
+  },
+  "easyrpg": {
+    "name": "EasyRPG",
+    "excerpt": "2007",
+    "description": "EasyRPG is a community project to create a free, open source, role playing game creation tool, compatible with RPG Maker 2000/2003 games."
   }
 }
