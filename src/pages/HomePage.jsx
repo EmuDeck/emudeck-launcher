@@ -8,8 +8,8 @@ import React, {
 import { useNavigate, Link } from 'react-router-dom';
 import { GlobalContext } from 'context/globalContext';
 import ProgressBar from 'components/atoms/ProgressBar/ProgressBar';
-import System from 'components/molecules/System/System';
-import { useFocusable, init, FocusContext, setKeyMap } from '../spatial';
+import Systems from 'components/organisms/Systems/Systems';
+import { useFocusable, init, FocusContext, setKeyMap } from 'spatial';
 
 init({
   debug: false,
@@ -142,58 +142,12 @@ function HomePage({ focusKey: focusKeyParam }) {
     }
   }, []);
 
-  const scrollingRef = useRef(null);
-
-  const onAssetFocus = useCallback(
-    ({ x, y }) => {
-      scrollingRef.current.scrollTo({
-        left: x,
-        top: y,
-        behavior: 'smooth',
-      });
-    },
-    [scrollingRef],
-  );
-
   const onClickTheme = (value) => {
     ipcChannel.sendMessage('get-theme', [value]);
     ipcChannel.once('get-theme', (theme) => {
       setStateTheme({ ...stateTheme, theme });
     });
   };
-
-  const onAssetPress = useCallback(
-    (item) => {
-      navigate(`games/${item.id}`);
-    },
-    [navigate],
-  );
-
-  const { ref, focusSelf, hasFocusedChild, focusKey } = useFocusable({
-    focusable: true,
-    saveLastFocusedChild: false,
-    trackChildren: true,
-    autoRestoreFocus: true,
-    isFocusBoundary: false,
-    focusKey: focusKeyParam,
-    preferredChildFocusKey: null,
-    onEnterPress: () => {},
-    onEnterRelease: () => {},
-    onArrowPress: () => true,
-    onFocus: () => {},
-    onBlur: () => {},
-    extraProps: { foo: 'bar' },
-  });
-
-  useEffect(() => {
-    if (systems) {
-      console.log('focus');
-
-      setTimeout(() => {
-        focusSelf();
-      }, '100');
-    }
-  }, [systems]);
 
   return (
     <>
@@ -211,46 +165,16 @@ function HomePage({ focusKey: focusKeyParam }) {
           <span>Y</span> Theme Selector
         </li>
       </ul>
-      <FocusContext.Provider value={focusKey}>
-        <div ref={ref}>
-          <div className="themes themes--enabled" ref={scrollingRef}>
-            <button type="button" onClick={() => onClickTheme('enabled')}>
-              Theme 1
-            </button>
-            <button type="button" onClick={() => onClickTheme('test')}>
-              Theme 1
-            </button>
-          </div>
-        </div>
-      </FocusContext.Provider>
 
-      <FocusContext.Provider value={focusKey}>
-        <div ref={ref} className="skew">
-          <div
-            ref={scrollingRef}
-            className={`systems ${
-              hasFocusedChild ? 'systems-focused' : 'systems-unfocused'
-            }`}
-          >
-            {!systems && (
-              <ProgressBar css="progress--success" infinite max="100" />
-            )}
-
-            {theme &&
-              systems &&
-              systems.map((item, i) => {
-                return (
-                  <System
-                    data={item}
-                    key={item.name}
-                    onFocus={onAssetFocus}
-                    onEnterPress={() => onAssetPress(item)}
-                  />
-                );
-              })}
-          </div>
-        </div>
-      </FocusContext.Provider>
+      <div className="themes">
+        <button type="button" onClick={() => onClickTheme('enabled')}>
+          Theme 1
+        </button>
+        <button type="button" onClick={() => onClickTheme('test')}>
+          Theme 1
+        </button>
+      </div>
+      {theme && systems && <Systems systems={systems} />}
     </>
   );
 }
