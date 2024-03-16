@@ -9,6 +9,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { GlobalContext } from 'context/globalContext';
 import ProgressBar from 'components/atoms/ProgressBar/ProgressBar';
 import Systems from 'components/organisms/Systems/Systems';
+import Themes from 'components/organisms/Themes/Themes';
 import { useFocusable, init, FocusContext, setKeyMap } from 'spatial';
 
 init({
@@ -29,10 +30,11 @@ function HomePage({ focusKey: focusKeyParam }) {
   const navigate = useNavigate();
   const [statePage, setStatePage] = useState({ systems: null });
   const { systems } = statePage;
-  const { stateTheme, setStateTheme, stateGamePad, setStateGamePad } =
+  const { stateTheme, state, setStateTheme, stateGamePad, setStateGamePad } =
     useContext(GlobalContext);
   const { gamepad } = stateGamePad;
   const { theme } = stateTheme;
+  const { userfolder } = state;
   useEffect(() => {
     if (!gamepad && 'getGamepads' in navigator) {
       console.log('pad detected');
@@ -157,9 +159,7 @@ function HomePage({ focusKey: focusKeyParam }) {
         <li>
           <span>A</span> Enter
         </li>
-        <li>
-          <span>B</span> Exit
-        </li>
+
         <li>
           <span>X</span> Refresh
         </li>
@@ -167,16 +167,8 @@ function HomePage({ focusKey: focusKeyParam }) {
           <span>Y</span> Theme Selector
         </li>
       </ul>
-
-      <div className="themes themes-enabled">
-        <button type="button" onClick={() => onClickTheme('enabled')}>
-          Theme 1
-        </button>
-        <button type="button" onClick={() => onClickTheme('test')}>
-          Theme 1
-        </button>
-      </div>
-
+      {/* <Themes onClick={onClickTheme} userfolder={userfolder} /> */}
+      {theme && systems && <Themes systems={systems} />}
       {theme && systems && <Systems systems={systems} />}
     </>
   );

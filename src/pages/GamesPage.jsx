@@ -153,7 +153,7 @@ function GamesPage({ focusKey: focusKeyParam }) {
       {games && (
         <div className="system-title">
           <img
-            src={`file:///${userfolder}/emudeck/launcher/themes/enabled/logos/${system}.svg`}
+            src={`file:///${userfolder}/emudeck/launcher/themes/default/logos/${system}.svg`}
             alt="alt"
             width="200"
           />

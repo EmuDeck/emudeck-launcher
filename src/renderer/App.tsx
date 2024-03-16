@@ -30,7 +30,7 @@ export default function App() {
     ipcChannel.once(`user-directory`, (message) => {
       setState({ ...state, userfolder: message });
     });
-    ipcChannel.sendMessage('get-theme', ['enabled']);
+    ipcChannel.sendMessage('get-theme', ['default']);
     ipcChannel.once('get-theme', (theme) => {
       setStateTheme({ ...stateTheme, theme });
     });
