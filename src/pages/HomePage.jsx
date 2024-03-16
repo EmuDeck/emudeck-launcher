@@ -166,7 +166,7 @@ function HomePage({ focusKey: focusKeyParam }) {
         </li>
       </ul>
 
-      <div className="themes">
+      <div className="themes themes-enabled">
         <button type="button" onClick={() => onClickTheme('enabled')}>
           Theme 1
         </button>
@@ -174,6 +174,7 @@ function HomePage({ focusKey: focusKeyParam }) {
           Theme 1
         </button>
       </div>
+
       {theme && systems && <Systems systems={systems} />}
     </>
   );

@@ -11,6 +11,10 @@ import ProgressBar from 'components/atoms/ProgressBar/ProgressBar';
 import System from 'components/molecules/System/System';
 import { useFocusable, init, FocusContext, setKeyMap } from 'spatial';
 
+init({
+  debug: false,
+  visualDebug: false,
+});
 function Systems({ focusKey: focusKeyParam, systems }) {
   const navigate = useNavigate();
   useEffect(() => {
@@ -59,7 +63,7 @@ function Systems({ focusKey: focusKeyParam, systems }) {
   });
   return (
     <FocusContext.Provider value={focusKey}>
-      <div ref={ref} className="skew">
+      <div ref={ref}>
         <div
           ref={scrollingRef}
           className={`systems ${
