@@ -8,6 +8,7 @@ import React, {
 import { useNavigate, Link } from 'react-router-dom';
 import { GlobalContext } from 'context/globalContext';
 import ProgressBar from 'components/atoms/ProgressBar/ProgressBar';
+import System from 'components/molecules/System/System';
 import { useFocusable, init, FocusContext, setKeyMap } from '../spatial';
 
 init({
@@ -22,39 +23,6 @@ init({
 //   down: 40, // or 'ArrowDown'
 //   enter: 13, // or 'Enter'
 // });
-
-function System({ data, onEnterPress, onFocus }) {
-  const { ref, focused } = useFocusable({
-    onEnterPress,
-    onFocus,
-  });
-
-  const item = data;
-  return (
-    <div ref={ref}>
-      <Link
-        focused={focused}
-        to={`games/${item.id}`}
-        className={`systems__system ${
-          focused ? 'systems__system--focused' : ''
-        }`}
-      >
-        <img className="systems__bg" src={item.poster} alt="" />
-        <div className="systems__excerpt">{item.excerpt}</div>
-        <div className="systems__name">{item.name}</div>
-        <div className="systems__count">Games: {item.games}</div>
-        <div className="systems__description">{item.description}</div>
-        <img
-          loading="lazy"
-          className="systems__controller"
-          src={item.controller}
-          alt=""
-        />
-        <img loading="lazy" className="systems__logo" src={item.logo} alt="" />
-      </Link>
-    </div>
-  );
-}
 
 function HomePage({ focusKey: focusKeyParam }) {
   const ipcChannel = window.electron.ipcRenderer;
@@ -228,7 +196,7 @@ function HomePage({ focusKey: focusKeyParam }) {
   }, [systems]);
 
   return (
-    <FocusContext.Provider value={focusKey}>
+    <>
       <ul className="controls">
         <li>
           <span>A</span> Enter
@@ -243,41 +211,47 @@ function HomePage({ focusKey: focusKeyParam }) {
           <span>Y</span> Theme Selector
         </li>
       </ul>
-
-      <div ref={ref}>
-        <div className="themes">
-          <button type="button" onClick={() => onClickTheme('enabled')}>
-            Theme 1
-          </button>
-          <button type="button" onClick={() => onClickTheme('test')}>
-            Theme 1
-          </button>
+      <FocusContext.Provider value={focusKey}>
+        <div ref={ref}>
+          <div className="themes themes--enabled" ref={scrollingRef}>
+            <button type="button" onClick={() => onClickTheme('enabled')}>
+              Theme 1
+            </button>
+            <button type="button" onClick={() => onClickTheme('test')}>
+              Theme 1
+            </button>
+          </div>
         </div>
-        <div
-          ref={scrollingRef}
-          className={`systems ${
-            hasFocusedChild ? 'systems-focused' : 'systems-unfocused'
-          }`}
-        >
-          {!systems && (
-            <ProgressBar css="progress--success" infinite max="100" />
-          )}
+      </FocusContext.Provider>
 
-          {theme &&
-            systems &&
-            systems.map((item, i) => {
-              return (
-                <System
-                  data={item}
-                  key={item.name}
-                  onFocus={onAssetFocus}
-                  onEnterPress={() => onAssetPress(item)}
-                />
-              );
-            })}
+      <FocusContext.Provider value={focusKey}>
+        <div ref={ref} className="skew">
+          <div
+            ref={scrollingRef}
+            className={`systems ${
+              hasFocusedChild ? 'systems-focused' : 'systems-unfocused'
+            }`}
+          >
+            {!systems && (
+              <ProgressBar css="progress--success" infinite max="100" />
+            )}
+
+            {theme &&
+              systems &&
+              systems.map((item, i) => {
+                return (
+                  <System
+                    data={item}
+                    key={item.name}
+                    onFocus={onAssetFocus}
+                    onEnterPress={() => onAssetPress(item)}
+                  />
+                );
+              })}
+          </div>
         </div>
-      </div>
-    </FocusContext.Provider>
+      </FocusContext.Provider>
+    </>
   );
 }
 
