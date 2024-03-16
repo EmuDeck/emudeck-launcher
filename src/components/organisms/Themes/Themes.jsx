@@ -48,7 +48,7 @@ function Themes({ focusKey: focusKeyParam, systems }) {
   );
   const { ref, focusSelf, hasFocusedChild, focusKey } = useFocusable({
     focusable: true,
-    saveLastFocusedChild: false,
+    saveLastFocusedChild: true,
     trackChildren: true,
     autoRestoreFocus: true,
     isFocusBoundary: false,
@@ -59,7 +59,6 @@ function Themes({ focusKey: focusKeyParam, systems }) {
     onArrowPress: () => true,
     onFocus: () => {},
     onBlur: () => {},
-    extraProps: { foo: 'bar' },
   });
   return (
     <FocusContext.Provider value={focusKey}>

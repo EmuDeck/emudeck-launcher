@@ -22,10 +22,12 @@ body {
   height: 100vh;
   overflow: hidden;
   display: flex;
-  transform: translateY(-20vh);
 }
-.systems__system:focus {
-  transform: rotate(45deg);
+.systems-unfocused {
+  margin-top: 0vh;
+}
+.systems-focused {
+  margin-top: 0vh;
 }
 .systems__system {
   flex: 0 0 100vw;
@@ -347,13 +349,13 @@ img.games__bg:after {
   padding: 20px;
   background: rgba(0, 0, 0, 0.6);
   transition: 0.5s;
-  transform: translateY(-20vh);
+  /* transform: translateY(-20vh); */
 }
 .themes--focused {
   opacity: 1;
   top: 0;
   transition: 0.5s;
-  transform: translateY(0);
+  /* transform: translateY(0); */
 }
 
 .themes__preview {
@@ -375,4 +377,8 @@ img.games__bg:after {
 #root {
   height: 100vh;
   overflow: hidden;
+}
+
+.themes--unfocused {
+  margin-top: -20vh;
 }

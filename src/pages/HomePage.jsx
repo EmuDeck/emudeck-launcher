@@ -164,7 +164,7 @@ function HomePage({ focusKey: focusKeyParam }) {
           <span>X</span> Refresh
         </li>
         <li>
-          <span>Y</span> Theme Selector
+          <span>&#8679;</span> Theme Selector
         </li>
       </ul>
       {/* <Themes onClick={onClickTheme} userfolder={userfolder} /> */}

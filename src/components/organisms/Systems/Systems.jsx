@@ -48,7 +48,7 @@ function Systems({ focusKey: focusKeyParam, systems }) {
   );
   const { ref, focusSelf, hasFocusedChild, focusKey } = useFocusable({
     focusable: true,
-    saveLastFocusedChild: false,
+    saveLastFocusedChild: true,
     trackChildren: true,
     autoRestoreFocus: true,
     isFocusBoundary: false,
