@@ -105,7 +105,7 @@ function GamesPage({ focusKey: focusKeyParam }) {
     ({ x, y }) => {
       scrollingRef.current.scrollTo({
         left: x,
-        top: y,
+        top: y - 500,
         behavior: 'smooth',
       });
     },

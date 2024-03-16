@@ -26,6 +26,15 @@ const systemsData = require('../data/systems.json');
 
 const homeUser = os.homedir();
 
+let theme;
+ipcMain.on('get-theme', async (event, name) => {
+  theme = name;
+  const themesPath = `${homeUser}/emudeck/launcher/themes`;
+  const themeCSSPath = `${themesPath}/${theme}/index.css`;
+  const themeCSSContent = fs.readFileSync(themeCSSPath, 'utf8');
+  event.reply('get-theme', themeCSSContent);
+});
+
 ipcMain.on('get-user-directory', (event) => {
   event.sender.send('user-directory', os.homedir());
 });
@@ -589,13 +598,13 @@ function processFolder(folderPath, depth) {
         systems[folderName] = { ...systemID, ...systemData };
         systems[
           folderName
-        ].poster = `file://${homeUser}/emudeck/launcher/themes/enabled/posters/${folderName}.jpg`;
+        ].poster = `file://${homeUser}/emudeck/launcher/themes/${theme}/posters/${folderName}.jpg`;
         systems[
           folderName
-        ].controller = `file://${homeUser}/emudeck/launcher/themes/enabled/controllers/${folderName}.png`;
+        ].controller = `file://${homeUser}/emudeck/launcher/themes/${theme}/controllers/${folderName}.png`;
         systems[
           folderName
-        ].logo = `file://${homeUser}/emudeck/launcher/themes/enabled/logos/${folderName}.svg`;
+        ].logo = `file://${homeUser}/emudeck/launcher/themes/${theme}/logos/${folderName}.svg`;
         // Crear entrada en gameList para la carpeta actual
         gameList[folderName] = {};
 
@@ -769,13 +778,6 @@ ipcMain.on('get-games', async (event, system) => {
       },
     );
   }
-});
-
-ipcMain.on('get-theme', async (event, name) => {
-  const themesPath = `${homeUser}/emudeck/launcher/themes`;
-  const themeCSSPath = `${themesPath}/${name}/index.css`;
-  const themeCSSContent = fs.readFileSync(themeCSSPath, 'utf8');
-  event.reply('get-theme', themeCSSContent);
 });
 
 /* end custom */
