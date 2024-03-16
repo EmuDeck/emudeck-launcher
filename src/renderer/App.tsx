@@ -11,8 +11,13 @@ import GamesPage from 'pages/GamesPage';
 import { GlobalContext } from 'context/globalContext';
 
 export default function App() {
-  const [state, setState] = useState({
+  const [stateGamePad, setStateGamePad] = useState({
     gamepad: false,
+  });
+  const ipcChannel = window.electron.ipcRenderer;
+
+  const [state, setState] = useState({
+    userfolder: undefined,
   });
 
   const [stateTheme, setStateTheme] = useState({
@@ -20,19 +25,26 @@ export default function App() {
   });
   const { theme } = stateTheme;
 
-  const ipcChannel = window.electron.ipcRenderer;
-  ipcChannel.sendMessage('get-theme');
-  ipcChannel.once('get-theme', (theme) => {
-    setStateTheme({ ...stateTheme, theme });
-  });
+  useEffect(() => {
+    ipcChannel.sendMessage('get-user-directory', []);
+    ipcChannel.once(`user-directory`, (message) => {
+      setState({ ...state, userfolder: message });
+    });
+    ipcChannel.sendMessage('get-theme');
+    ipcChannel.once('get-theme', (theme) => {
+      setStateTheme({ ...stateTheme, theme });
+    });
+  }, []);
 
   return (
     <GlobalContext.Provider
       value={{
-        state,
-        setState,
+        stateGamePad,
+        setStateGamePad,
         stateTheme,
         setStateTheme,
+        state,
+        setState,
       }}
     >
       <style>{theme}</style>

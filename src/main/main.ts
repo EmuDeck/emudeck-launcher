@@ -26,6 +26,10 @@ const systemsData = require('../data/systems.json');
 
 const homeUser = os.homedir();
 
+ipcMain.on('get-user-directory', (event) => {
+  event.sender.send('user-directory', os.homedir());
+});
+
 async function downloadDatabase(url, savePath) {
   try {
     const response = await axios({

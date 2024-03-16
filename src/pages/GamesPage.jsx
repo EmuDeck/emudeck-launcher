@@ -72,6 +72,8 @@ function GamesPage({ focusKey: focusKeyParam }) {
   const [statePage, setStatePage] = useState({ games: null });
   const { games } = statePage;
   const { system } = useParams();
+  const { state } = useContext(GlobalContext);
+  const { userfolder } = state;
 
   useEffect(() => {
     const cache = localStorage.getItem(system);
@@ -151,7 +153,7 @@ function GamesPage({ focusKey: focusKeyParam }) {
       {games && (
         <div className="system-title">
           <img
-            src={`file:///home/deck/emudeck/launcher/themes/enabled/logos/${system}.svg`}
+            src={`file:///${userfolder}/emudeck/launcher/themes/enabled/logos/${system}.svg`}
             alt="alt"
             width="200"
           />

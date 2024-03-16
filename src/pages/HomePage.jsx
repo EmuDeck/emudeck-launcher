@@ -61,13 +61,14 @@ function HomePage({ focusKey: focusKeyParam }) {
   const navigate = useNavigate();
   const [statePage, setStatePage] = useState({ systems: null });
   const { systems } = statePage;
-  const { stateTheme, state, setState } = useContext(GlobalContext);
-  const { gamepad } = state;
+  const { stateTheme, stateGamePad, setStateGamePad } =
+    useContext(GlobalContext);
+  const { gamepad } = stateGamePad;
   const { theme } = stateTheme;
   useEffect(() => {
     if (!gamepad && 'getGamepads' in navigator) {
       console.log('pad detected');
-      setState({ gamepad: true });
+      setStateGamePad({ gamepad: true });
       // Almacena el estado anterior de los botones
       let previousButtonState = {};
 
