@@ -117,11 +117,9 @@ if (os.platform().includes('win32')) {
 }
 
 // Settings to JS vars
-// const systemsData = require('../data/systems.json');
 let settingsPath;
 const themesPath = `${homeUser}/emudeck/launcher/themes`;
-let themeCSSPath = `${themesPath}/enabled/index.css`;
-themeCSSPath = `themes/epicnoir/index.css`;
+const themeCSSPath = `${themesPath}/enabled/index.css`;
 if (os.platform().includes('win32')) {
   settingsPath = `${homeUser}/EmuDeck/settings.ps1`;
 } else {
@@ -835,7 +833,7 @@ const createWindow = async () => {
     width: 1280,
     height: 800,
     autoHideMenuBar: true,
-    fullscreen: false,
+    fullscreen: true,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       webSecurity: false,
