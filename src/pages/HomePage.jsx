@@ -61,7 +61,7 @@ function HomePage({ focusKey: focusKeyParam }) {
   const navigate = useNavigate();
   const [statePage, setStatePage] = useState({ systems: null });
   const { systems } = statePage;
-  const { stateTheme, stateGamePad, setStateGamePad } =
+  const { stateTheme, setStateTheme, stateGamePad, setStateGamePad } =
     useContext(GlobalContext);
   const { gamepad } = stateGamePad;
   const { theme } = stateTheme;
@@ -187,6 +187,13 @@ function HomePage({ focusKey: focusKeyParam }) {
     [scrollingRef],
   );
 
+  const onClickTheme = (value) => {
+    ipcChannel.sendMessage('get-theme', [value]);
+    ipcChannel.once('get-theme', (theme) => {
+      setStateTheme({ ...stateTheme, theme });
+    });
+  };
+
   const onAssetPress = useCallback(
     (item) => {
       navigate(`games/${item.id}`);
@@ -227,10 +234,25 @@ function HomePage({ focusKey: focusKeyParam }) {
           <span>A</span> Enter
         </li>
         <li>
+          <span>B</span> Exit
+        </li>
+        <li>
           <span>X</span> Refresh
         </li>
+        <li>
+          <span>Y</span> Theme Selector
+        </li>
       </ul>
+
       <div ref={ref}>
+        <div className="themes">
+          <button type="button" onClick={() => onClickTheme('enabled')}>
+            Theme 1
+          </button>
+          <button type="button" onClick={() => onClickTheme('test')}>
+            Theme 1
+          </button>
+        </div>
         <div
           ref={scrollingRef}
           className={`systems ${

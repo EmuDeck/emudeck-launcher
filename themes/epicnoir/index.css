@@ -335,3 +335,18 @@ img.games__bg:after {
   background-color: #fff;
   color: #fff;
 }
+
+.themes {
+  width: 20vw;
+  height: 100vh;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+.themes--enabled {
+  opacity: 1;
+}
+.themes--enabled + div {
+  transform: perspective(164vw) rotateY(-44deg);
+}

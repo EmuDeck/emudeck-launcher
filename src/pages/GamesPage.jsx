@@ -166,6 +166,9 @@ function GamesPage({ focusKey: focusKeyParam }) {
               <span>A</span> Play
             </li>
             <li>
+              <span>B</span> Go back
+            </li>
+            <li>
               <span>X</span> Refresh
             </li>
           </ul>

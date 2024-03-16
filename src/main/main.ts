@@ -122,8 +122,7 @@ if (os.platform().includes('win32')) {
 
 // Settings to JS vars
 let settingsPath;
-const themesPath = `${homeUser}/emudeck/launcher/themes`;
-const themeCSSPath = `${themesPath}/enabled/index.css`;
+
 if (os.platform().includes('win32')) {
   settingsPath = `${homeUser}/EmuDeck/settings.ps1`;
 } else {
@@ -131,7 +130,7 @@ if (os.platform().includes('win32')) {
 }
 
 const settingsContent = fs.readFileSync(settingsPath, 'utf8');
-const themeCSSContent = fs.readFileSync(themeCSSPath, 'utf8');
+
 // Divide el contenido en líneas y filtra las líneas que no son comentarios
 const lines = settingsContent
   .split('\n')
@@ -772,7 +771,10 @@ ipcMain.on('get-games', async (event, system) => {
   }
 });
 
-ipcMain.on('get-theme', async (event) => {
+ipcMain.on('get-theme', async (event, name) => {
+  const themesPath = `${homeUser}/emudeck/launcher/themes`;
+  const themeCSSPath = `${themesPath}/${name}/index.css`;
+  const themeCSSContent = fs.readFileSync(themeCSSPath, 'utf8');
   event.reply('get-theme', themeCSSContent);
 });
 
@@ -837,7 +839,7 @@ const createWindow = async () => {
     width: 1280,
     height: 800,
     autoHideMenuBar: true,
-    fullscreen: true,
+    fullscreen: false,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       webSecurity: false,
