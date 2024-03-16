@@ -47,6 +47,7 @@ function HomePage({ focusKey: focusKeyParam }) {
         button14: 'ArrowLeft',
         button15: 'ArrowRight',
         button0: 'Enter',
+        button1: 'X',
         button2: 'S',
         button3: 'E',
       };
@@ -60,6 +61,7 @@ function HomePage({ focusKey: focusKeyParam }) {
         Enter: 13,
         Esc: 27,
         S: 83,
+        X: 88,
       };
 
       // Función para manejar la detección de botones
