@@ -35,6 +35,37 @@ ipcMain.on('get-theme', async (event, name) => {
   event.reply('get-theme', themeCSSContent);
 });
 
+async function getFirstLevelSubfolders(folder) {
+  const absolutePath = path.resolve(folder);
+  try {
+    const files = await fs.promises.readdir(absolutePath);
+    const subfolders = [];
+
+    for (const file of files) {
+      const fullPath = path.join(absolutePath, file);
+      const stats = await fs.promises.stat(fullPath);
+      if (stats.isDirectory()) {
+        subfolders.push(file);
+      }
+    }
+
+    return subfolders;
+  } catch (error) {
+    console.error('Error reading the folder:', error);
+    return [];
+  }
+}
+
+ipcMain.on('get-available-themes', async (event, name) => {
+  theme = name;
+  const themesPath = `${homeUser}/emudeck/launcher/themes`;
+  (async () => {
+    const subfolders = await getFirstLevelSubfolders(themesPath);
+    console.log(subfolders);
+    event.reply('get-available-themes', subfolders);
+  })();
+});
+
 ipcMain.on('get-user-directory', (event) => {
   event.sender.send('user-directory', os.homedir());
 });

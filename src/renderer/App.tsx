@@ -18,11 +18,14 @@ export default function App() {
 
   const [state, setState] = useState({
     userfolder: undefined,
+    themeName: 'default',
+    themes: undefined,
   });
 
   const [stateTheme, setStateTheme] = useState({
     theme: null,
   });
+  const { themeName } = state;
   const { theme } = stateTheme;
 
   useEffect(() => {
@@ -30,7 +33,7 @@ export default function App() {
     ipcChannel.once(`user-directory`, (message) => {
       setState({ ...state, userfolder: message });
     });
-    ipcChannel.sendMessage('get-theme', ['default']);
+    ipcChannel.sendMessage('get-theme', [themeName]);
     ipcChannel.once('get-theme', (theme) => {
       setStateTheme({ ...stateTheme, theme });
     });

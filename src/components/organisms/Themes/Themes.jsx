@@ -15,17 +15,18 @@ init({
   debug: false,
   visualDebug: false,
 });
-function Themes({ focusKey: focusKeyParam, systems }) {
+function Themes({ focusKey: focusKeyParam, themes, onClick }) {
+  console.log({ themes });
   const navigate = useNavigate();
   useEffect(() => {
-    if (systems) {
+    if (themes) {
       console.log('focus');
 
       setTimeout(() => {
         focusSelf();
       }, '100');
     }
-  }, [systems]);
+  }, [themes]);
 
   const scrollingRef = useRef(null);
 
@@ -69,13 +70,21 @@ function Themes({ focusKey: focusKeyParam, systems }) {
             hasFocusedChild ? 'themes--focused' : 'themes--unfocused'
           }`}
         >
-          {!systems && (
+          {!themes && (
             <ProgressBar css="progress--success" infinite max="100" />
           )}
 
-          <Theme onFocus={onAssetFocus} />
-          <Theme onFocus={onAssetFocus} />
-          <Theme onFocus={onAssetFocus} />
+          {themes &&
+            themes.map((item, i) => {
+              console.log({ item });
+              return (
+                <Theme
+                  name={item}
+                  onFocus={onAssetFocus}
+                  onEnterPress={() => onClick(item)}
+                />
+              );
+            })}
         </div>
       </div>
     </FocusContext.Provider>
