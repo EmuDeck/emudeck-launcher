@@ -11,6 +11,7 @@ import ProgressBar from 'components/atoms/ProgressBar/ProgressBar';
 import Systems from 'components/organisms/Systems/Systems';
 import Themes from 'components/organisms/Themes/Themes';
 import { useFocusable, init, FocusContext, setKeyMap } from 'spatial';
+import 'global.css';
 
 init({
   debug: false,

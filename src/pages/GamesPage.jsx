@@ -142,9 +142,11 @@ function GamesPage({ focusKey: focusKeyParam }) {
   return (
     <>
       {!games && (
-        <div className="center">
-          <div className="center__group">
-            <span className="h3">Creating database, please wait...</span>
+        <div className="loading">
+          <div className="loading__group">
+            <span className="loading__title">
+              Creating database, please wait...
+            </span>
             <br />
             <ProgressBar css="progress--success" infinite max="100" />
           </div>
