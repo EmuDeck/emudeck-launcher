@@ -41,7 +41,7 @@ function HomePage({ focusKey: focusKeyParam }) {
   } = useContext(GlobalContext);
   const { gamepad } = stateGamePad;
   const { theme } = stateTheme;
-  const { themes } = state;
+  const { themes, themeName, currentSystem } = state;
 
   // Mapeo de botones del D-pad a las teclas de teclado
   const dpadKeyMap = {
@@ -165,17 +165,29 @@ function HomePage({ focusKey: focusKeyParam }) {
       console.log({ systemsTemp });
       setState({ ...state, themes: systemsTemp });
     });
+
+    // Set current Selected theme.
+    const currentTheme = localStorage.getItem('current_theme');
+    if (currentTheme) {
+      ipcChannel.sendMessage('get-theme', [currentTheme]);
+      ipcChannel.once('get-theme', (theme) => {
+        setState({ ...state, themeName: theme });
+        setStateTheme({ ...stateTheme, theme });
+      });
+    }
   }, []);
 
   const onClickSetTheme = (value) => {
     ipcChannel.sendMessage('get-theme', [value]);
     ipcChannel.once('get-theme', (theme) => {
       setStateTheme({ ...stateTheme, theme });
+      setState({ ...state, themeName: value });
+      localStorage.setItem('current_theme', value);
     });
   };
 
   return (
-    <>
+    <div>
       <ul className="controls">
         <li>
           <span>A</span> Enter
@@ -193,7 +205,14 @@ function HomePage({ focusKey: focusKeyParam }) {
         <Themes themes={themes} onClick={onClickSetTheme} />
       )}
       {theme && systems && <Systems systems={systems} />}
-    </>
+      {currentSystem && (
+        <img
+          className="global-background"
+          src={`file:///Users/rsedano/emudeck/launcher/themes/${themeName}/posters/${currentSystem}.jpg`}
+          alt="System"
+        />
+      )}
+    </div>
   );
 }
 

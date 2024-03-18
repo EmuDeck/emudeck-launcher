@@ -38,6 +38,7 @@ function Systems({ focusKey: focusKeyParam, systems }) {
 
   const onAssetFocus = useCallback(
     ({ x, y }) => {
+      console.log({ scrollingRef });
       scrollingRef.current.scrollTo({
         left: x,
         top: y,
@@ -46,6 +47,14 @@ function Systems({ focusKey: focusKeyParam, systems }) {
     },
     [scrollingRef],
   );
+
+  const multifunction = (item) => {
+    onAssetFocus();
+  };
+
+  const setSystem = (system) => {
+    console.log({ system });
+  };
   const { ref, focusSelf, hasFocusedChild, focusKey } = useFocusable({
     focusable: true,
     saveLastFocusedChild: true,

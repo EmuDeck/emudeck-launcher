@@ -20,6 +20,7 @@ export default function App() {
     userfolder: undefined,
     themeName: 'default',
     themes: undefined,
+    currentSystem: undefined,
   });
 
   const [stateTheme, setStateTheme] = useState({

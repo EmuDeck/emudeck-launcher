@@ -228,3 +228,7 @@ body {
   background: rgba(93, 255, 77, 0.3);
   z-index: 1;
 }
+
+.global-background {
+  display: none;
+}

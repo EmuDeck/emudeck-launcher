@@ -76,7 +76,6 @@ function Themes({ focusKey: focusKeyParam, themes, onClick }) {
 
           {themes &&
             themes.map((item, i) => {
-              console.log({ item });
               return (
                 <Theme
                   name={item}
