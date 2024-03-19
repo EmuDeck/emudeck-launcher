@@ -869,9 +869,9 @@ if (process.env.NODE_ENV === 'production') {
 const isDebug =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
-// if (isDebug) {
-require('electron-debug')();
-// }
+if (isDebug) {
+  require('electron-debug')();
+}
 
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
@@ -900,10 +900,10 @@ const createWindow = async () => {
   };
 
   mainWindow = new BrowserWindow({
-    show: true,
+    show: false,
     width: 1280,
     height: 800,
-    autoHideMenuBar: false,
+    autoHideMenuBar: true,
     fullscreen: false,
     icon: getAssetPath('icon.png'),
     webPreferences: {
