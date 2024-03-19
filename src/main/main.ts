@@ -22,6 +22,7 @@ const sqlite3 = require('sqlite3').verbose();
 const os = require('os');
 const fs = require('fs');
 const axios = require('axios');
+const simpleGit = require('simple-git');
 const systemsData = require('../data/systems.json');
 
 const homeUser = os.homedir();
@@ -91,6 +92,50 @@ async function downloadDatabase(url, savePath) {
     console.error('Error al descargar la base de datos:', error.message);
   }
 }
+
+async function cloneOrUpdateRepository(repoUrl, destinationPath) {
+  try {
+    const directoryExistsAlready = await directoryExists(destinationPath);
+
+    const git = simpleGit();
+
+    if (!directoryExistsAlready) {
+      // Clona el repositorio si el directorio no existe
+      await git.clone(repoUrl, destinationPath);
+      console.log(`Repositorio clonado en: ${destinationPath}`);
+    } else {
+      // Realiza un pull si el directorio ya existe
+      await git.cwd(destinationPath).pull();
+      console.log(`Actualizado el repositorio en: ${destinationPath}`);
+    }
+  } catch (error) {
+    console.error('Error al clonar o actualizar el repositorio:', error);
+  }
+}
+
+async function directoryExists(path) {
+  try {
+    await fs.access(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function clone() {
+  const repoUrl = 'https://github.com/EmuDeck/emudeck-launcher-themes.git'; // Cambia esto por la URL de tu repositorio
+  const destinationPath = `${homeUser}/emudeck/launcher/themes`; // Cambia esto por tu directorio de destino
+
+  try {
+    await cloneOrUpdateRepository(repoUrl, destinationPath);
+    console.log('El clonado ha finalizado. Ejecutando el resto del código...');
+    // Coloca aquí el resto de tu código que depende de la finalización del clonado
+  } catch (error) {
+    console.error('No se pudo clonar el repositorio. Error:', error);
+  }
+}
+
+clone();
 
 // Library SQLITE
 const dbPathLibrary = `${homeUser}/emudeck/launcher/sqlite/library.db`;
