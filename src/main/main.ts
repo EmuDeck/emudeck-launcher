@@ -135,7 +135,18 @@ async function clone() {
   }
 }
 
-clone();
+// clone();
+
+// Download it
+const repoUrl = 'https://github.com/EmuDeck/emudeck-launcher-themes.git'; // Cambia esto por la URL de tu repositorio
+const destinationPath = `${homeUser}/emudeck/launcher/themes`; // Cambia esto por tu directorio de destino
+
+cloneOrUpdateRepository(repoUrl, destinationPath)
+  .then(() => {
+    console.log('Themes descargadas y guardadas con éxito.');
+    createWindow();
+  })
+  .catch((error) => console.error('Error al guardar los themes:', error));
 
 // Library SQLITE
 const dbPathLibrary = `${homeUser}/emudeck/launcher/sqlite/library.db`;
@@ -974,7 +985,7 @@ app.on('window-all-closed', () => {
 app
   .whenReady()
   .then(() => {
-    createWindow();
+    // createWindow();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
