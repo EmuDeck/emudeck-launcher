@@ -31,8 +31,26 @@ export default function App() {
 
   useEffect(() => {
     ipcChannel.sendMessage('get-user-directory', []);
-    ipcChannel.once(`user-directory`, (message) => {
-      setState({ ...state, userfolder: message });
+    ipcChannel.once(`user-directory`, (userFolder) => {
+      // setState({ ...state, userfolder: userFolder });
+
+      ipcChannel.sendMessage('get-available-themes');
+      ipcChannel.once('get-available-themes', (systemsTemp) => {
+        // Set current Selected theme
+        const currentTheme = localStorage.getItem('current_theme');
+        if (currentTheme) {
+          ipcChannel.sendMessage('get-theme', [currentTheme]);
+          ipcChannel.once('get-theme', (theme) => {
+            setState({
+              ...state,
+              themeName: currentTheme,
+              themes: systemsTemp,
+              userfolder: userFolder,
+            });
+            setStateTheme({ ...stateTheme, theme });
+          });
+        }
+      });
     });
     ipcChannel.sendMessage('get-theme', [themeName]);
     ipcChannel.once('get-theme', (theme) => {
