@@ -38,18 +38,22 @@ export default function App() {
       ipcChannel.once('get-available-themes', (systemsTemp) => {
         // Set current Selected theme
         const currentTheme = localStorage.getItem('current_theme');
+        let themeToCheck;
         if (currentTheme) {
-          ipcChannel.sendMessage('get-theme', [currentTheme]);
-          ipcChannel.once('get-theme', (theme) => {
-            setState({
-              ...state,
-              themeName: currentTheme,
-              themes: systemsTemp,
-              userfolder: userFolder,
-            });
-            setStateTheme({ ...stateTheme, theme });
-          });
+          themeToCheck = currentTheme;
+        } else {
+          themeToCheck = 'default';
         }
+        ipcChannel.sendMessage('get-theme', [themeToCheck]);
+        ipcChannel.once('get-theme', (theme) => {
+          setState({
+            ...state,
+            themeName: themeToCheck,
+            themes: systemsTemp,
+            userfolder: userFolder,
+          });
+          setStateTheme({ ...stateTheme, theme });
+        });
       });
     });
     ipcChannel.sendMessage('get-theme', [themeName]);
