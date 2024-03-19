@@ -686,7 +686,7 @@ function processFolder(folderPath, depth) {
         systems[folderName] = { ...systemID, ...systemData };
         systems[
           folderName
-        ].poster = `file://${homeUser}/emudeck/launcher/themes/${theme}/posters/${folderName}.jpg`;
+        ].poster = `file://${homeUser}/emudeck/launcher/themes/${theme}/systems/${folderName}.jpg`;
         systems[
           folderName
         ].controller = `file://${homeUser}/emudeck/launcher/themes/${theme}/controllers/${folderName}.png`;

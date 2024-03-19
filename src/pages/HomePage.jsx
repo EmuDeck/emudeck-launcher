@@ -160,18 +160,6 @@ function HomePage({ focusKey: focusKeyParam }) {
 
   useEffect(() => {
     // Themes
-    ipcChannel.sendMessage('get-available-themes');
-    ipcChannel.once('get-available-themes', (systemsTemp) => {
-      // Set current Selected theme
-      const currentTheme = localStorage.getItem('current_theme');
-      if (currentTheme) {
-        ipcChannel.sendMessage('get-theme', [currentTheme]);
-        ipcChannel.once('get-theme', (theme) => {
-          setState({ ...state, themeName: currentTheme, themes: systemsTemp });
-          setStateTheme({ ...stateTheme, theme });
-        });
-      }
-    });
   }, []);
 
   const onClickSetTheme = (value) => {
@@ -205,7 +193,7 @@ function HomePage({ focusKey: focusKeyParam }) {
       {currentSystem && (
         <img
           className="global-background"
-          src={`file:///Users/rsedano/emudeck/launcher/themes/${themeName}/posters/${currentSystem}.jpg`}
+          src={`file:///Users/rsedano/emudeck/launcher/themes/${themeName}/backgrounds/${currentSystem}.jpg`}
           alt="System"
         />
       )}

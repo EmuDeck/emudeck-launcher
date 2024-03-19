@@ -94,6 +94,9 @@ function Systems({ focusKey: focusKeyParam, systems }) {
                 />
               );
             })}
+          <div className="system__fake">
+            <System data={{}} onFocus={onAssetFocus} />
+          </div>
         </div>
       </div>
     </FocusContext.Provider>

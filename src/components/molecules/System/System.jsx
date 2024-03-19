@@ -43,7 +43,7 @@ function System({ data, onEnterPress, onFocus }) {
       >
         <img
           className="systems__bg"
-          src={`file:///Users/rsedano/emudeck/launcher/themes/${themeName}/posters/${item.id}.jpg`}
+          src={`file:///Users/rsedano/emudeck/launcher/themes/${themeName}/systems/${item.id}.jpg`}
           alt=""
         />
         <div className="systems__excerpt">{item.excerpt}</div>
