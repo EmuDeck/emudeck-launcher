@@ -42,6 +42,7 @@ async function getFirstLevelSubfolders(folder) {
     const subfolders = [];
 
     for (const file of files) {
+      if (file === '.git') continue;
       const fullPath = path.join(absolutePath, file);
       const stats = await fs.promises.stat(fullPath);
       if (stats.isDirectory()) {
