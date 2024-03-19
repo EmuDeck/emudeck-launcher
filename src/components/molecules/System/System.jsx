@@ -11,7 +11,7 @@ function System({ data, onEnterPress, onFocus }) {
   });
   const { state, setState } = useContext(GlobalContext);
 
-  const { themeName, currentSystem } = state;
+  const { themeName, currentSystem, userfolder } = state;
   const item = data;
 
   const saveSystem = (id) => {
@@ -43,7 +43,7 @@ function System({ data, onEnterPress, onFocus }) {
       >
         <img
           className="systems__bg"
-          src={`file:///Users/rsedano/emudeck/launcher/themes/${themeName}/systems/${item.id}.jpg`}
+          src={`file://${userfolder}/emudeck/launcher/themes/${themeName}/systems/${item.id}.jpg`}
           alt=""
         />
         <div className="systems__excerpt">{item.excerpt}</div>
@@ -62,7 +62,7 @@ function System({ data, onEnterPress, onFocus }) {
           <img
             loading="lazy"
             className="systems__logo"
-            src={`file:///Users/rsedano/emudeck/launcher/themes/${themeName}/logos/${item.id}.svg`}
+            src={`file://${userfolder}/emudeck/launcher/themes/${themeName}/logos/${item.id}.svg`}
             alt=""
           />
         </div>

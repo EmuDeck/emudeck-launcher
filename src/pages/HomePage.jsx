@@ -41,7 +41,7 @@ function HomePage({ focusKey: focusKeyParam }) {
   } = useContext(GlobalContext);
   const { gamepad } = stateGamePad;
   const { theme } = stateTheme;
-  const { themes, themeName, currentSystem } = state;
+  const { themes, themeName, currentSystem, userfolder } = state;
 
   // Mapeo de botones del D-pad a las teclas de teclado
   const dpadKeyMap = {
@@ -193,7 +193,7 @@ function HomePage({ focusKey: focusKeyParam }) {
       {currentSystem && (
         <img
           className="global-background"
-          src={`file:///Users/rsedano/emudeck/launcher/themes/${themeName}/backgrounds/${currentSystem}.jpg`}
+          src={`file://${userfolder}/emudeck/launcher/themes/${themeName}/backgrounds/${currentSystem}.jpg`}
           alt="System"
         />
       )}
