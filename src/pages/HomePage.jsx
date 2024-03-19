@@ -186,11 +186,11 @@ function HomePage({ focusKey: focusKeyParam }) {
         </li>
       </ul>
       {/* <Themes onClick={onClickTheme} userfolder={userfolder} /> */}
-      {themes && systems && (
+      {themes && systems && theme && systems && userfolder && (
         <Themes themes={themes} onClick={onClickSetTheme} />
       )}
-      {theme && systems && <Systems systems={systems} />}
-      {currentSystem && (
+      {theme && systems && userfolder && <Systems systems={systems} />}
+      {theme && systems && userfolder && currentSystem && (
         <img
           className="global-background"
           src={`file://${userfolder}/emudeck/launcher/themes/${themeName}/backgrounds/${currentSystem}.jpg`}
