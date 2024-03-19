@@ -162,19 +162,16 @@ function HomePage({ focusKey: focusKeyParam }) {
     // Themes
     ipcChannel.sendMessage('get-available-themes');
     ipcChannel.once('get-available-themes', (systemsTemp) => {
-      console.log({ systemsTemp });
-      setState({ ...state, themes: systemsTemp });
+      // Set current Selected theme
+      const currentTheme = localStorage.getItem('current_theme');
+      if (currentTheme) {
+        ipcChannel.sendMessage('get-theme', [currentTheme]);
+        ipcChannel.once('get-theme', (theme) => {
+          setState({ ...state, themeName: currentTheme, themes: systemsTemp });
+          setStateTheme({ ...stateTheme, theme });
+        });
+      }
     });
-
-    // Set current Selected theme.
-    const currentTheme = localStorage.getItem('current_theme');
-    if (currentTheme) {
-      ipcChannel.sendMessage('get-theme', [currentTheme]);
-      ipcChannel.once('get-theme', (theme) => {
-        setState({ ...state, themeName: theme });
-        setStateTheme({ ...stateTheme, theme });
-      });
-    }
   }, []);
 
   const onClickSetTheme = (value) => {
