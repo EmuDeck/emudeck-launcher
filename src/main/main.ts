@@ -95,11 +95,9 @@ async function downloadDatabase(url, savePath) {
 
 async function cloneOrUpdateRepository(repoUrl, destinationPath) {
   try {
-    const directoryExistsAlready = await directoryExists(destinationPath);
-
     const git = simpleGit();
 
-    if (!directoryExistsAlready) {
+    if (!fs.existsSync(destinationPath)) {
       // Clona el repositorio si el directorio no existe
       await git.clone(repoUrl, destinationPath);
       console.log(`Repositorio clonado en: ${destinationPath}`);
@@ -113,28 +111,6 @@ async function cloneOrUpdateRepository(repoUrl, destinationPath) {
   }
 }
 
-async function directoryExists(path) {
-  try {
-    await fs.access(path);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-async function clone() {
-  const repoUrl = 'https://github.com/EmuDeck/emudeck-launcher-themes.git'; // Cambia esto por la URL de tu repositorio
-  const destinationPath = `${homeUser}/emudeck/launcher/themes`; // Cambia esto por tu directorio de destino
-
-  try {
-    await cloneOrUpdateRepository(repoUrl, destinationPath);
-    console.log('El clonado ha finalizado. Ejecutando el resto del código...');
-    // Coloca aquí el resto de tu código que depende de la finalización del clonado
-  } catch (error) {
-    console.error('No se pudo clonar el repositorio. Error:', error);
-  }
-}
-
 // clone();
 
 // Download it
@@ -143,7 +119,6 @@ const destinationPath = `${homeUser}/emudeck/launcher/themes`; // Cambia esto po
 
 cloneOrUpdateRepository(repoUrl, destinationPath)
   .then(() => {
-    console.log('Themes descargadas y guardadas con éxito.');
     createWindow();
   })
   .catch((error) => console.error('Error al guardar los themes:', error));
@@ -894,9 +869,9 @@ if (process.env.NODE_ENV === 'production') {
 const isDebug =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
-if (isDebug) {
-  require('electron-debug')();
-}
+// if (isDebug) {
+require('electron-debug')();
+// }
 
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
@@ -925,10 +900,10 @@ const createWindow = async () => {
   };
 
   mainWindow = new BrowserWindow({
-    show: false,
+    show: true,
     width: 1280,
     height: 800,
-    autoHideMenuBar: true,
+    autoHideMenuBar: false,
     fullscreen: false,
     icon: getAssetPath('icon.png'),
     webPreferences: {
@@ -940,7 +915,7 @@ const createWindow = async () => {
   });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
-
+  mainWindow.webContents.openDevTools();
   mainWindow.on('ready-to-show', () => {
     if (!mainWindow) {
       throw new Error('"mainWindow" is not defined');
@@ -965,6 +940,8 @@ const createWindow = async () => {
     return { action: 'deny' };
   });
 
+  mainWindow.webContents.openDevTools();
+
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
   new AppUpdater();
@@ -986,6 +963,7 @@ app
   .whenReady()
   .then(() => {
     // createWindow();
+
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
