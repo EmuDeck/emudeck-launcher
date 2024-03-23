@@ -138,7 +138,6 @@ if (!fs.existsSync(dbPathLibrary)) {
     }
     console.log('Conexión exitosa a la base de datos.');
 
-    // Define aquí tus comandos SQL para crear tablas
     const createTableSql = `CREATE TABLE "roms" (
       "id"	INTEGER,
       "file_name"	TEXT,
@@ -152,7 +151,7 @@ if (!fs.existsSync(dbPathLibrary)) {
       "favourite"	INTEGER DEFAULT 0,
       PRIMARY KEY("id" AUTOINCREMENT),
       UNIQUE("file_name")
-    )`; // Asegúrate de reemplazar esto con tu SQL para crear tablas
+    )`;
     db.run(createTableSql, (err) => {
       if (err) {
         console.error(err.message);
@@ -590,46 +589,49 @@ const insertROM = (
   // db.all(query, [`%${romNameForSearch}%`, platform], (err, rows) => {
   db.all(query, [`%${romNameForSearch}%`, platform], (err, rows) => {
     const results = rows;
-
+    const imageData = {
+      gameFile,
+      romNameTrimmed,
+      folderName,
+      platform,
+      gameFilePath,
+    };
     if (results.length > 0) {
-      const insertQuery = `
-          INSERT OR REPLACE INTO roms (file_name, name, system, platform, path, databaseID)
-          VALUES (?, ?, ?, ?, ?, ?)
-        `;
-      const imageData = {
-        gameFile,
-        romNameTrimmed,
-        folderName,
-        platform,
-        gameFilePath,
-      };
       results.forEach((result) => {
         imageData.databaseID = result.DatabaseID;
       });
-      // console.log({ imageData });
-      dbLibrary.run(
-        insertQuery,
-        [
-          imageData.gameFile,
-          imageData.romNameTrimmed,
-          imageData.folderName,
-          imageData.platform,
-          imageData.gameFilePath,
-          imageData.databaseID,
-        ],
-        function (err) {
-          if (err) {
-            return console.error('Error al insertar datos:', err.message);
-          }
-          fs.writeFile(fileCachePath, '', (err) => {
-            if (err) {
-              console.error('Error writing the file:', err);
-            }
-          });
-        },
-      );
-      dbLibrary.close();
+    } else {
+      imageData.databaseID = 0;
     }
+
+    const insertQuery = `
+        INSERT OR REPLACE INTO roms (file_name, name, system, platform, path, databaseID)
+        VALUES (?, ?, ?, ?, ?, ?)
+      `;
+
+    // console.log({ imageData });
+    dbLibrary.run(
+      insertQuery,
+      [
+        imageData.gameFile,
+        imageData.romNameTrimmed,
+        imageData.folderName,
+        imageData.platform,
+        imageData.gameFilePath,
+        imageData.databaseID,
+      ],
+      function (err) {
+        if (err) {
+          return console.error('Error al insertar datos:', err.message);
+        }
+        fs.writeFile(fileCachePath, '', (err) => {
+          if (err) {
+            console.error('Error writing the file:', err);
+          }
+        });
+      },
+    );
+    dbLibrary.close();
   });
 };
 
