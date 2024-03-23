@@ -51,8 +51,8 @@ body {
   display: inline-block;
   opacity: 0.5;
 }
-.themes__preview + .themes__preview {
-  margin-left: 10px;
+.themes div + div {
+  margin-left: 16px;
 }
 
 .themes__preview--focused {
@@ -60,7 +60,7 @@ body {
 }
 
 .themes--unfocused {
-  margin-top: -164px;
+  margin-top: -170px;
 }
 
 /*
