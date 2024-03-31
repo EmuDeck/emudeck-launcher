@@ -99,7 +99,7 @@ async function cloneOrUpdateRepository(repoUrl, destinationPath) {
 
     if (!fs.existsSync(destinationPath)) {
       // Clona el repositorio si el directorio no existe
-      await git.clone(repoUrl, destinationPath);
+      await git.clone(repoUrl, destinationPath, ['--depth', '1']);
       console.log(`Repositorio clonado en: ${destinationPath}`);
     } else {
       // Realiza un pull si el directorio ya existe
@@ -631,7 +631,7 @@ const insertROM = (
         });
       },
     );
-    dbLibrary.close();
+    // dbLibrary.close();
   });
 };
 
