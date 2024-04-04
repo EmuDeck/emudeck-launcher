@@ -17,7 +17,6 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
 /* custom */
-app.commandLine.appendSwitch('disk-cache-size', '10737418240');
 const sqlite3 = require('sqlite3').verbose();
 const os = require('os');
 const fs = require('fs');
@@ -26,6 +25,11 @@ const simpleGit = require('simple-git');
 const systemsData = require('../data/systems.json');
 
 const homeUser = os.homedir();
+
+app.commandLine.appendSwitch('disk-cache-size', '10737418240');
+if (os.platform() === 'linux') {
+  app.commandLine.appendSwitch('--no-sandbox');
+}
 
 let theme;
 ipcMain.on('get-theme', async (event, name) => {
