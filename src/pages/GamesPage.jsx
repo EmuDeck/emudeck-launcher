@@ -40,26 +40,23 @@ function Game({ data, onEnterPress, onFocus }) {
         </div>
       )}
       {item.box && (
-        <img
-          loading="lazy"
-          className="games__bg"
-          src={`https://images.launchbox-app.com/${item.box}`}
-          alt=""
-        />
+        <img loading="lazy" className="games__bg" src={`${item.box}`} alt="" />
       )}
       {item.screenshot && (
-        <img
-          loading="lazy"
-          className="games__bg games__screenshot"
-          src={`https://images.launchbox-app.com/${item.screenshot}`}
-          alt=""
-        />
+        <picture>
+          <img
+            loading="lazy"
+            className="games__bg games__screenshot"
+            src={`${item.screenshot}`}
+            alt=""
+          />
+        </picture>
       )}
       {item.logo && (
         <img
           loading="lazy"
           className="games__bg games__logo"
-          src={`https://images.launchbox-app.com/${item.logo}`}
+          src={`${item.logo}`}
           alt=""
         />
       )}
@@ -83,6 +80,7 @@ function GamesPage({ focusKey: focusKeyParam }) {
       const gamesArray = Object.values(json);
       setStatePage({ ...statePage, games: gamesArray });
       console.log('Cache restored');
+      // askForArtwork(system, cache);
     } else {
       console.log('ask for games');
       ipcChannel.sendMessage(`get-games`, system);
@@ -95,9 +93,36 @@ function GamesPage({ focusKey: focusKeyParam }) {
         console.log('games to state');
         setStatePage({ ...statePage, games: gamesArray });
         console.log('games loaded');
+        askForArtwork(system, gamesTemp);
       });
     }
   }, []);
+
+  const askForArtwork = (system, cache) => {
+    ipcChannel.sendMessage(`ss-artwork`, system);
+    ipcChannel.on('ss-artwork', (gamesTemp) => {
+      console.log('updating new artwork');
+      const jsonCache = JSON.parse(cache);
+      const jsonNew = JSON.parse(gamesTemp);
+
+      console.log({ jsonNew });
+      const jsonCacheArray = Object.values(jsonCache);
+      const jsonNewArray = Object.values(jsonNew);
+
+      const merged = jsonCacheArray.map((item) => {
+        const update = jsonNewArray.find(
+          (updateItem) => updateItem.path === item.path,
+        );
+        if (update) {
+          return { ...item, ...update };
+        }
+        return item;
+      });
+
+      localStorage.setItem(system, JSON.stringify(merged));
+      // setStatePage({ ...statePage, games: merged });
+    });
+  };
 
   const scrollingRef = useRef(null);
 
@@ -105,7 +130,7 @@ function GamesPage({ focusKey: focusKeyParam }) {
     ({ x, y }) => {
       scrollingRef.current.scrollTo({
         left: x,
-        top: y - 500,
+        top: y - 100,
         behavior: 'smooth',
       });
     },

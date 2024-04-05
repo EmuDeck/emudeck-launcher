@@ -17,6 +17,7 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
 /* custom */
+const https = require('https');
 const sqlite3 = require('sqlite3').verbose();
 const os = require('os');
 const fs = require('fs');
@@ -25,6 +26,11 @@ const simpleGit = require('simple-git');
 const systemsData = require('../data/systems.json');
 
 const homeUser = os.homedir();
+
+// SS
+const devid = 'djrodtc';
+const devpassword = 'diFay35WElL';
+const softname = 'EmuDeckROMLauncher';
 
 app.commandLine.appendSwitch('disk-cache-size', '10737418240');
 if (os.platform() === 'linux') {
@@ -67,7 +73,6 @@ ipcMain.on('get-available-themes', async (event, name) => {
   const themesPath = `${homeUser}/emudeck/launcher/themes`;
   (async () => {
     const subfolders = await getFirstLevelSubfolders(themesPath);
-    console.log(subfolders);
     event.reply('get-available-themes', subfolders);
   })();
 });
@@ -225,6 +230,302 @@ const maxDepth = 1; // Puedes ajustar este valor según tu necesidad
 
 const systems = {};
 const gameList = {};
+
+function getScId(system) {
+  let ssID;
+  switch (system) {
+    case 'genesis':
+    case 'genesiswide':
+      ssID = '1';
+      break;
+    case 'mastersystem':
+      ssID = '2';
+      break;
+    case 'nes':
+      ssID = '3';
+      break;
+    case 'snes':
+      ssID = '4';
+      break;
+    case 'gb':
+      ssID = '9';
+      break;
+    case 'gbc':
+      ssID = '10';
+      break;
+    case 'virtualboy':
+      ssID = '11';
+      break;
+    case 'gba':
+      ssID = '12';
+      break;
+    case 'gc':
+      ssID = '13';
+      break;
+    case 'n64':
+      ssID = '14';
+      break;
+    case 'nds':
+      ssID = '15';
+      break;
+    case 'wii':
+      ssID = '16';
+      break;
+    case '3ds':
+      ssID = '17';
+      break;
+    case 'sega32x':
+      ssID = '19';
+      break;
+    case 'segacd':
+      ssID = '20';
+      break;
+    case 'gamegear':
+      ssID = '21';
+      break;
+    case 'saturn':
+      ssID = '22';
+      break;
+    case 'dreamcast':
+      ssID = '23';
+      break;
+    case 'ngp':
+      ssID = '25';
+      break;
+    case 'atari2600':
+      ssID = '26';
+      break;
+    case 'jaguar':
+      ssID = '27';
+      break;
+    case 'lynx':
+      ssID = '28';
+      break;
+    case '3do':
+      ssID = '29';
+      break;
+    case 'pcengine':
+      ssID = '31';
+      break;
+    case 'bbcmicro':
+      ssID = '37';
+      break;
+    case 'atari5200':
+      ssID = '40';
+      break;
+    case 'atari7800':
+      ssID = '41';
+      break;
+    case 'atarist':
+      ssID = '42';
+      break;
+    case 'atari800':
+      ssID = '43';
+      break;
+    case 'wswan':
+      ssID = '45';
+      break;
+    case 'wswanc':
+      ssID = '46';
+      break;
+    case 'colecovision':
+      ssID = '48';
+      break;
+    case 'gw':
+      ssID = '52';
+      break;
+    case 'psx':
+      ssID = '57';
+      break;
+    case 'ps2':
+      ssID = '58';
+      break;
+    case 'psp':
+      ssID = '61';
+      break;
+    case 'amiga600':
+      ssID = '64';
+      break;
+    case 'amstradcpc':
+      ssID = '65';
+      break;
+    case 'c64':
+      ssID = '66';
+      break;
+    case 'scv':
+      ssID = '67';
+      break;
+    case 'neogeocd':
+      ssID = '70';
+      break;
+    case 'pcfx':
+      ssID = '72';
+      break;
+    case 'vic20':
+      ssID = '73';
+      break;
+    case 'zxspectrum':
+      ssID = '76';
+      break;
+    case 'zx81':
+      ssID = '77';
+      break;
+    case 'x68000':
+      ssID = '79';
+      break;
+    case 'channelf':
+      ssID = '80';
+      break;
+    case 'ngpc':
+      ssID = '82';
+      break;
+    case 'apple2':
+      ssID = '86';
+      break;
+    case 'gx4000':
+      ssID = '87';
+      break;
+    case 'dragon':
+      ssID = '91';
+      break;
+    case 'bk':
+      ssID = '93';
+      break;
+    case 'vectrex':
+      ssID = '102';
+      break;
+    case 'supergrafx':
+      ssID = '105';
+      break;
+    case 'fds':
+      ssID = '106';
+      break;
+    case 'satellaview':
+      ssID = '107';
+      break;
+    case 'sufami':
+      ssID = '108';
+      break;
+    case 'sg1000':
+      ssID = '109';
+      break;
+    case 'amiga1200':
+      ssID = '111';
+      break;
+    case 'msx':
+      ssID = '113';
+      break;
+    case 'pcenginecd':
+      ssID = '114';
+      break;
+    case 'intellivision':
+      ssID = '115';
+      break;
+    case 'msx2':
+      ssID = '116';
+      break;
+    case 'msxturbor':
+      ssID = '118';
+      break;
+    case '64dd':
+      ssID = '122';
+      break;
+    case 'scummvm':
+      ssID = '123';
+      break;
+    case 'amigacdtv':
+      ssID = '129';
+      break;
+    case 'amigacd32':
+      ssID = '130';
+      break;
+    case 'oricatmos':
+      ssID = '131';
+      break;
+    case 'amiga':
+      ssID = '134';
+      break;
+    case 'dos':
+    case 'prboom':
+      ssID = '135';
+      break;
+    case 'thomson':
+      ssID = '141';
+      break;
+    case 'neogeo':
+      ssID = '142';
+      break;
+    case 'megadrive':
+      ssID = '203';
+      break;
+    case 'ti994a':
+      ssID = '205';
+      break;
+    case 'lutro':
+      ssID = '206';
+      break;
+    case 'supervision':
+      ssID = '207';
+      break;
+    case 'pc98':
+      ssID = '208';
+      break;
+    case 'pokemini':
+      ssID = '211';
+      break;
+    case 'samcoupe':
+      ssID = '213';
+      break;
+    case 'openbor':
+      ssID = '214';
+      break;
+    case 'uzebox':
+      ssID = '216';
+      break;
+    case 'apple2gs':
+      ssID = '217';
+      break;
+    case 'spectravideo':
+      ssID = '218';
+      break;
+    case 'palm':
+      ssID = '219';
+      break;
+    case 'x1':
+      ssID = '220';
+      break;
+    case 'pc88':
+      ssID = '221';
+      break;
+    case 'tic80':
+      ssID = '222';
+      break;
+    case 'solarus':
+      ssID = '223';
+      break;
+    case 'mame':
+      ssID = '230';
+      break;
+    case 'easyrpg':
+      ssID = '231';
+      break;
+    case 'pico8':
+      ssID = '234';
+      break;
+    case 'pcv2':
+      ssID = '237';
+      break;
+    case 'pet':
+      ssID = '240';
+      break;
+    case 'lowresnx':
+      ssID = '244';
+      break;
+    default:
+      ssID = 'unknown';
+  }
+  return ssID;
+}
 
 function getLaunchboxAlias(system) {
   let platform;
@@ -665,15 +966,12 @@ function processFolder(folderPath, depth) {
         const systemID = systems[folderName];
         const systemData = systemsData[folderName];
         systems[folderName] = { ...systemID, ...systemData };
-        systems[
-          folderName
-        ].poster = `file://${homeUser}/emudeck/launcher/themes/${theme}/systems/${folderName}.jpg`;
-        systems[
-          folderName
-        ].controller = `file://${homeUser}/emudeck/launcher/themes/${theme}/controllers/${folderName}.png`;
-        systems[
-          folderName
-        ].logo = `file://${homeUser}/emudeck/launcher/themes/${theme}/logos/${folderName}.svg`;
+        systems[folderName].poster =
+          `file://${homeUser}/emudeck/launcher/themes/${theme}/systems/${folderName}.jpg`;
+        systems[folderName].controller =
+          `file://${homeUser}/emudeck/launcher/themes/${theme}/controllers/${folderName}.png`;
+        systems[folderName].logo =
+          `file://${homeUser}/emudeck/launcher/themes/${theme}/logos/${folderName}.svg`;
         // Crear entrada en gameList para la carpeta actual
         gameList[folderName] = {};
 
@@ -823,9 +1121,9 @@ ipcMain.on('get-games', async (event, system) => {
             library.roms.path,
             library.roms.name,
             library.roms.system,
-            (SELECT FileName FROM Images WHERE Images.DatabaseID = library.roms.databaseID AND Images.Type = "Screenshot - Gameplay" LIMIT 1) as screenshot,
-            (SELECT FileName FROM Images WHERE Images.DatabaseID = library.roms.databaseID AND Images.Type = "Clear Logo" LIMIT 1) as logo,
-            (SELECT FileName FROM Images WHERE Images.DatabaseID = library.roms.databaseID AND Images.Type = "Box - Front" LIMIT 1) as boxart
+            (SELECT CONCAT('https://images.launchbox-app.com/', FileName) FROM Images WHERE Images.DatabaseID = library.roms.databaseID AND Images.Type = "Screenshot - Gameplay" LIMIT 1) as screenshot,
+            (SELECT CONCAT('https://images.launchbox-app.com/', FileName) FROM Images WHERE Images.DatabaseID = library.roms.databaseID AND Images.Type = "Clear Logo" LIMIT 1) as logo,
+            (SELECT CONCAT('https://images.launchbox-app.com/', FileName) FROM Images WHERE Images.DatabaseID = library.roms.databaseID AND Images.Type = "Box - Front" LIMIT 1) as boxart
           FROM library.roms
           WHERE library.roms.system = ?
           GROUP BY library.roms.name`;
@@ -849,6 +1147,114 @@ ipcMain.on('get-games', async (event, system) => {
   }
 });
 
+async function getGameIdByName(gameName, system) {
+  const systemId = getScId(system);
+  const url = `https://www.screenscraper.fr/api2/jeuRecherche.php?devid=${devid}&devpassword=${devpassword}&softname=${softname}&systemeid=${systemId}&output=json&recherche=${encodeURIComponent(gameName)}`;
+
+  console.log({ url });
+
+  // Devolvemos una nueva Promesa
+  return new Promise((resolve, reject) => {
+    https
+      .get(url, (res) => {
+        let data = '';
+
+        res.on('data', (chunk) => {
+          data += chunk;
+        });
+
+        res.on('end', () => {
+          try {
+            const jsonData = JSON.parse(data);
+            if (
+              jsonData &&
+              jsonData.response &&
+              jsonData.response.jeux &&
+              jsonData.response.jeux.length > 0
+            ) {
+              const gameId = jsonData.response.jeux[0].id;
+              console.log('ID del Juego encontrado:', gameId);
+              // Construimos la URL de la imagen y resolvemos la promesa con ella
+              if (gameId) {
+                resolve(
+                  `https://www.screenscraper.fr/image.php?gameid=${gameId}&media=ss&hd=0&region=wor&num=&version=&maxwidth=338&maxheight=190`,
+                );
+              } else {
+                resolve(null);
+              }
+            } else {
+              console.log('Juego no encontrado');
+              resolve(null); // Resuelve con null si el juego no se encuentra
+            }
+          } catch (error) {
+            console.error('Error al procesar la respuesta JSON:', error);
+            reject(error); // Rechaza la promesa si hay un error
+          }
+        });
+      })
+      .on('error', (error) => {
+        console.error('Error en la solicitud:', error);
+        reject(error); // Rechaza la promesa en caso de error en la solicitud
+      });
+  });
+}
+
+ipcMain.on('ss-artwork', async (event, system) => {
+  if (system !== undefined) {
+    let resultsJSON;
+    // const query =   'SELECT * FROM roms WHERE system = ?';
+
+    const selectQuery = `
+       SELECT DISTINCT
+         path,
+         name,
+         system
+       FROM roms
+       WHERE system = ?
+       AND databaseID = 0
+       GROUP BY name
+      `;
+
+    // console.log({ imageData });
+    dbLibrary.all(selectQuery, [system], function (err, rows) {
+      if (err) {
+        return console.error(
+          'Error loading games with no artwork:',
+          err.message,
+        );
+      }
+      const resultsArray = rows.map((row) => ({ ...row }));
+
+      // We run through the array to get the missing pictures
+      async function main(game, system) {
+        try {
+          const imageUrl = await getGameIdByName(game, system);
+          return imageUrl;
+        } catch (error) {
+          console.error('Error obteniendo la URL de la imagen:', error);
+        }
+      }
+
+      if (resultsArray.length > 0) {
+        resultsArray.forEach((result) => {
+          main(result.name, result.system)
+            .then((imageUrl) => {
+              console.log('URL de la imagen:', imageUrl);
+              result.screenshot = imageUrl;
+
+              // console.log({ resultsArray });
+              resultsJSON = JSON.stringify(resultsArray, null, 2);
+              event.reply('ss-artwork', resultsJSON);
+            })
+            .catch((error) => {
+              console.error('Error obteniendo la URL de la imagen:', error);
+            });
+        });
+      }
+      event.reply('ss-artwork-finish');
+    });
+  }
+});
 /* end custom */
 
 class AppUpdater {

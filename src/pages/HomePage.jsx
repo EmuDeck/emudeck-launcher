@@ -150,13 +150,14 @@ function HomePage({ focusKey: focusKeyParam }) {
     } else {
       ipcChannel.sendMessage('get-systems');
       ipcChannel.once('get-systems', (systemsTemp) => {
+        console.log({ systemsTemp });
         const json = JSON.parse(systemsTemp);
         const systemsArray = Object.values(json);
         localStorage.setItem('systems', systemsTemp);
         setStatePage({ ...statePage, systems: systemsArray });
       });
     }
-  }, [themes]);
+  }, []);
 
   useEffect(() => {
     // Themes

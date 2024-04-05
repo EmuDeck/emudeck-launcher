@@ -206,3 +206,16 @@ body {
   z-index: -1;
   object-fit: cover;
 }
+
+.gb .games__system:after {
+  content: '';
+  display: block;
+  z-index: 2;
+  background: greenyellow;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0.4;
+  mix-blend-mode: multiply;
+}
