@@ -33,9 +33,7 @@ const devpassword = 'diFay35WElL';
 const softname = 'EmuDeckROMLauncher';
 
 app.commandLine.appendSwitch('disk-cache-size', '10737418240');
-if (os.platform() === 'linux') {
-  app.commandLine.appendSwitch('--no-sandbox');
-}
+app.commandLine.appendSwitch('--no-sandbox');
 
 let theme;
 ipcMain.on('get-theme', async (event, name) => {
@@ -157,6 +155,7 @@ if (!fs.existsSync(dbPathLibrary)) {
       "played"	INTEGER DEFAULT 0,
       "path"	TEXT,
       "databaseID"	INTEGER,
+      "parsed"	INTEGER,
       "favourite"	INTEGER DEFAULT 0,
       PRIMARY KEY("id" AUTOINCREMENT),
       UNIQUE("file_name")
@@ -905,13 +904,15 @@ const insertROM = (
       results.forEach((result) => {
         imageData.databaseID = result.DatabaseID;
       });
+      imageData.parsed = 1;
     } else {
       imageData.databaseID = 0;
+      imageData.parsed = 0;
     }
 
     const insertQuery = `
-        INSERT OR REPLACE INTO roms (file_name, name, system, platform, path, databaseID)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT OR REPLACE INTO roms (file_name, name, system, platform, path, databaseID, parsed)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
       `;
 
     // console.log({ imageData });
@@ -924,6 +925,7 @@ const insertROM = (
         imageData.platform,
         imageData.gameFilePath,
         imageData.databaseID,
+        imageData.parsed,
       ],
       function (err) {
         if (err) {
@@ -1173,12 +1175,52 @@ async function getGameIdByName(gameName, system) {
               jsonData.response.jeux.length > 0
             ) {
               const gameId = jsonData.response.jeux[0].id;
-              console.log('ID del Juego encontrado:', gameId);
-              // Construimos la URL de la imagen y resolvemos la promesa con ella
+              // console.log('ID del Juego encontrado:', gameId);
               if (gameId) {
-                resolve(
-                  `https://www.screenscraper.fr/image.php?gameid=${gameId}&media=ss&hd=0&region=wor&num=&version=&maxwidth=338&maxheight=190`,
-                );
+                const urlSS = `https://www.screenscraper.fr/image.php?gameid=${gameId}&media=ss&hd=0&region=wor&num=&version=&maxwidth=338`;
+                // We check if the url exists
+                https
+                  .get(urlSS, (res) => {
+                    res.on('data', (chunk) => {
+                      data += chunk;
+                    });
+
+                    res.on('end', () => {
+                      if (data.length > 1000) {
+                        resolve(
+                          `https://www.screenscraper.fr/image.php?gameid=${gameId}&media=ss&hd=0&region=wor&num=&version=&maxwidth=338`,
+                        );
+                      } else {
+                        // We retry with other region
+                        urlSS = `https://www.screenscraper.fr/image.php?gameid=${gameId}&media=ss&hd=0&region=usa&num=&version=&maxwidth=338`;
+                        // We check if the url exists
+                        https
+                          .get(urlSS, (res) => {
+                            res.on('data', (chunk) => {
+                              data += chunk;
+                            });
+                            res.on('end', () => {
+                              if (data.length > 1000) {
+                                resolve(
+                                  `https://www.screenscraper.fr/image.php?gameid=${gameId}&media=ss&hd=0&region=usa&num=&version=&maxwidth=338`,
+                                );
+                              } else {
+                                console.log('IMG not found');
+                                resolve(false);
+                              }
+                            });
+                          })
+                          .on('error', (err) => {
+                            console.log(`Error: ${err.message}`);
+                          });
+
+                        resolve(false);
+                      }
+                    });
+                  })
+                  .on('error', (err) => {
+                    console.log(`Error: ${err.message}`);
+                  });
               } else {
                 resolve(null);
               }
@@ -1208,10 +1250,11 @@ ipcMain.on('ss-artwork', async (event, system) => {
        SELECT DISTINCT
          path,
          name,
+         file_name,
          system
        FROM roms
        WHERE system = ?
-       AND databaseID = 0
+       AND parsed = 0
        GROUP BY name
       `;
 
@@ -1226,10 +1269,13 @@ ipcMain.on('ss-artwork', async (event, system) => {
       const resultsArray = rows.map((row) => ({ ...row }));
 
       // We run through the array to get the missing pictures
-      async function main(game, system) {
+      async function lookForGame(game, system) {
         try {
           const imageUrl = await getGameIdByName(game, system);
-          return imageUrl;
+          if (imageUrl) {
+            return imageUrl;
+          }
+          return false;
         } catch (error) {
           console.error('Error obteniendo la URL de la imagen:', error);
         }
@@ -1237,14 +1283,58 @@ ipcMain.on('ss-artwork', async (event, system) => {
 
       if (resultsArray.length > 0) {
         resultsArray.forEach((result) => {
-          main(result.name, result.system)
-            .then((imageUrl) => {
-              console.log('URL de la imagen:', imageUrl);
-              result.screenshot = imageUrl;
+          const romName = result.file_name;
 
-              // console.log({ resultsArray });
-              resultsJSON = JSON.stringify(resultsArray, null, 2);
-              event.reply('ss-artwork', resultsJSON);
+          let romNameTrimmed = romName
+            .replace(/\.nkit/g, '')
+            .replace(/!/g, '')
+            .replace(/Disc /g, '')
+            .replace(/Rev /g, '')
+            .replace(/\([^()]*\)/g, '')
+            .replace(/\[[A-z0-9!+]*\]/g, '')
+            .replace(/ \./g, '.');
+
+          romNameTrimmed = romNameTrimmed.replace(/\..*/, '');
+          console.log({ romNameTrimmed });
+          lookForGame(romNameTrimmed, result.system)
+            .then((imageUrl) => {
+              if (imageUrl) {
+                console.log('URL de la imagen:', imageUrl);
+                result.screenshot = imageUrl;
+                // We mark the game as scraped
+
+                // SQLITE UPDATE
+                dbLibrary.run(
+                  `UPDATE roms
+                        SET parsed = 1
+                        WHERE name = ? and system = ?`,
+                  [result.name, result.system],
+                  function (err) {
+                    if (err) {
+                      return console.error(err.message);
+                    }
+                    console.log(`Filas actualizadas: ${this.changes}`);
+                  },
+                );
+
+                // console.log({ resultsArray });
+                resultsJSON = JSON.stringify(resultsArray, null, 2);
+                event.reply('ss-artwork', resultsJSON);
+              } else {
+                // SQLITE UPDATE
+                dbLibrary.run(
+                  `UPDATE roms
+                        SET parsed = 2
+                        WHERE name = ? and system = ?`,
+                  [result.name, result.system],
+                  function (err) {
+                    if (err) {
+                      return console.error(err.message);
+                    }
+                    console.log(`Filas actualizadas: ${this.changes}`);
+                  },
+                );
+              }
             })
             .catch((error) => {
               console.error('Error obteniendo la URL de la imagen:', error);

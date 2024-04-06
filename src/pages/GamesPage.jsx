@@ -82,7 +82,7 @@ function GamesPage({ focusKey: focusKeyParam }) {
       const gamesArray = Object.values(json);
       setStatePage({ ...statePage, games: gamesArray });
       console.log('Cache restored');
-      // askForArtwork(system, cache);
+      askForArtwork(system, cache);
     } else {
       console.log('ask for games');
       ipcChannel.sendMessage(`get-games`, system);
@@ -95,7 +95,7 @@ function GamesPage({ focusKey: focusKeyParam }) {
         console.log('games to state');
         setStatePage({ ...statePage, games: gamesArray });
         console.log('games loaded');
-        // askForArtwork(system, gamesTemp);
+        askForArtwork(system, gamesTemp);
       });
     }
   }, []);
