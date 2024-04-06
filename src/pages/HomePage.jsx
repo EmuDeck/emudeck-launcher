@@ -179,7 +179,7 @@ function HomePage({ focusKey: focusKeyParam }) {
           <span>A</span> Enter
         </li>
 
-        <li>
+        <li onClick={() => window.location.reload()}>
           <span>X</span> Refresh
         </li>
         <li>

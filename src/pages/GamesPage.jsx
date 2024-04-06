@@ -5,7 +5,7 @@ import React, {
   useRef,
   useContext,
 } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useNavigate, Link, useParams } from 'react-router-dom';
 import { GlobalContext } from 'context/globalContext';
 import ProgressBar from 'components/atoms/ProgressBar/ProgressBar';
 import { useFocusable, init, FocusContext } from '../spatial';
@@ -30,6 +30,7 @@ function Game({ data, onEnterPress, onFocus }) {
   return (
     <Link
       ref={ref}
+      href="/"
       focused={focused}
       className={`games__system ${focused ? 'games__system--focused' : ''}`}
     >
@@ -65,6 +66,7 @@ function Game({ data, onEnterPress, onFocus }) {
 }
 
 function GamesPage({ focusKey: focusKeyParam }) {
+  const navigate = useNavigate();
   const ipcChannel = window.electron.ipcRenderer;
   const [statePage, setStatePage] = useState({ games: null });
   const { games } = statePage;
@@ -93,7 +95,7 @@ function GamesPage({ focusKey: focusKeyParam }) {
         console.log('games to state');
         setStatePage({ ...statePage, games: gamesArray });
         console.log('games loaded');
-        askForArtwork(system, gamesTemp);
+        // askForArtwork(system, gamesTemp);
       });
     }
   }, []);
@@ -192,10 +194,10 @@ function GamesPage({ focusKey: focusKeyParam }) {
             <li>
               <span>A</span> Play
             </li>
-            <li>
+            <li onClick={() => navigate(-1)}>
               <span>B</span> Go back
             </li>
-            <li>
+            <li onClick={() => window.location.reload()}>
               <span>X</span> Refresh
             </li>
           </ul>
