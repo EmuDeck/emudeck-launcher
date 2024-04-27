@@ -33,7 +33,6 @@ const devpassword = 'diFay35WElL';
 const softname = 'EmuDeckROMLauncher';
 
 app.commandLine.appendSwitch('disk-cache-size', '10737418240');
-app.commandLine.appendSwitch('--no-sandbox');
 
 let theme;
 ipcMain.on('get-theme', async (event, name) => {
