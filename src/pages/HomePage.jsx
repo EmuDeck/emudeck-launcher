@@ -91,7 +91,11 @@ function HomePage({ focusKey: focusKeyParam }) {
               if (buttonIndex === 'button2') {
                 localStorage.removeItem('systems');
                 setTimeout(() => {
-                  window.location.reload();
+                  ipcChannel.sendMessage('refresh-systems');
+                  // ipcChannel.once('refresh-systems', (systemsTemp) => {
+                  //   console.log({ systemsTemp });
+                  //   setState({ ...state, themes: systemsTemp });
+                  // });
                 }, '500');
               }
 

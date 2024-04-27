@@ -12,7 +12,7 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import { exec, spawn } from 'child_process';
+import { exec } from 'child_process';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
@@ -65,6 +65,11 @@ async function getFirstLevelSubfolders(folder) {
     return [];
   }
 }
+
+ipcMain.on('refresh-systems', async (event, name) => {
+  app.relaunch();
+  app.quit();
+});
 
 ipcMain.on('get-available-themes', async (event, name) => {
   theme = name;
@@ -224,6 +229,7 @@ lines.forEach((line) => {
 let { romsPath } = envVars;
 // $HOME FIX
 romsPath = romsPath.replace('"$HOME"', homeUser);
+romsPath = romsPath.replaceAll('"', '');
 
 const maxDepth = 1; // Puedes ajustar este valor según tu necesidad
 
