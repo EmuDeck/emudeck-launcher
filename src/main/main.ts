@@ -1128,9 +1128,9 @@ ipcMain.on('get-games', async (event, system) => {
             library.roms.path,
             library.roms.name,
             library.roms.system,
-            (SELECT CONCAT('https://images.launchbox-app.com/', FileName) FROM Images WHERE Images.DatabaseID = library.roms.databaseID AND Images.Type = "Screenshot - Gameplay" LIMIT 1) as screenshot,
-            (SELECT CONCAT('https://images.launchbox-app.com/', FileName) FROM Images WHERE Images.DatabaseID = library.roms.databaseID AND Images.Type = "Clear Logo" LIMIT 1) as logo,
-            (SELECT CONCAT('https://images.launchbox-app.com/', FileName) FROM Images WHERE Images.DatabaseID = library.roms.databaseID AND Images.Type = "Box - Front" LIMIT 1) as boxart
+            (SELECT 'https://images.launchbox-app.com/' || FileName FROM Images WHERE Images.DatabaseID = library.roms.databaseID AND Images.Type = "Screenshot - Gameplay" LIMIT 1) as screenshot,
+            (SELECT 'https://images.launchbox-app.com/' || FileName FROM Images WHERE Images.DatabaseID = library.roms.databaseID AND Images.Type = "Clear Logo" LIMIT 1) as logo,
+            (SELECT 'https://images.launchbox-app.com/' || FileName FROM Images WHERE Images.DatabaseID = library.roms.databaseID AND Images.Type = "Box - Front" LIMIT 1) as boxart
           FROM library.roms
           WHERE library.roms.system = ?
           GROUP BY library.roms.name`;
